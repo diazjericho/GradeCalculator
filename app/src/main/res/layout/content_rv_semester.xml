@@ -38,8 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="24dp"
-                    android:text="1st Semester"
-                    android:textAppearance="bold"/>
+                    android:text="1st Semester"/>
 
                 <TextView
                     android:id="@+id/text_year_academic"
@@ -60,8 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="24dp"
-                    android:text="3.5"
-                    android:textAppearance="bold"/>
+                    android:text="3.5"/>
             </LinearLayout>
         </LinearLayout>
 

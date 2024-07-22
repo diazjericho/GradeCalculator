@@ -18,6 +18,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_margin="8dp"
             android:text="List of Subjects for 1st year, A.Y. 2023 - 2024"/>
     </LinearLayout>
 
@@ -34,6 +36,7 @@
             android:layout_height="wrap_content"
             android:autofillHints="subjects"
             android:hint="Search subjects"
+            android:layout_margin="8dp"
             android:inputType="text" />
     </LinearLayout>
 
@@ -45,4 +48,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_search_bar" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:contentDescription="addSubject"
+        android:text="Add subject"
+        app:icon="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
