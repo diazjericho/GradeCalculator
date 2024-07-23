@@ -41,7 +41,8 @@
                 android:id="@+id/text_input_year_start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="false"/>
+                android:singleLine="true"
+                android:inputType="number"/>
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +63,8 @@
                 android:id="@+id/text_input_year_end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="false"/>
+                android:singleLine="true"
+                android:inputType="number"/>
         </LinearLayout>
     </LinearLayout>
 

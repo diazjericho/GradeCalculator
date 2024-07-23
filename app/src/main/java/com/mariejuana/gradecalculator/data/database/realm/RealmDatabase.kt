@@ -6,6 +6,7 @@ import com.mariejuana.gradecalculator.data.database.models.SemesterModel
 import com.mariejuana.gradecalculator.data.database.models.SubjectModel
 import com.mariejuana.gradecalculator.data.database.models.YearLevelModel
 import com.mariejuana.gradecalculator.data.model.Category
+import com.mariejuana.gradecalculator.data.model.YearLevel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -13,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 import java.lang.IllegalStateException
+import java.time.Year
 
 class RealmDatabase {
     // Setup the database
@@ -51,5 +53,17 @@ class RealmDatabase {
     fun getAllActivitiesByCategory(id: String): List<ActivityModel>? {
         val category = realm.query<CategoryModel>("id == $0", id).first().find()
         return category?.listActivity
+    }
+
+    suspend fun addYearLevel(yearLevel: String, academicYearStart: String, academicYearEnd: String) {
+        realm.write {
+            val yearLevelDetails = YearLevelModel().apply {
+                this.yearLevel = yearLevel
+                this.startAcademicYear = academicYearStart
+                this.endAcademicYear = academicYearEnd
+            }
+
+            copyToRealm(yearLevelDetails)
+        }
     }
 }

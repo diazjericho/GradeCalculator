@@ -1,4 +1,4 @@
-package com.mariejuana.gradecalculator.ui.screens.yearlevel
+package com.mariejuana.gradecalculator.ui.screens.main.semester
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,11 +7,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mariejuana.gradecalculator.R
 
-class YearLevelScreen : AppCompatActivity() {
+class SemesterScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_year_level_screen)
+        setContentView(R.layout.activity_semester_screen)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

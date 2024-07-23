@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.semester.SemesterScreen">
+    tools:context=".ui.screens.main.semester.SemesterScreen">
 
     <LinearLayout
         android:id="@+id/layout_semester_title"

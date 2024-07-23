@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.categories.activities.ActivitiesScreen">
+    tools:context=".ui.screens.main.categories.activities.ActivitiesScreen">
 
     <LinearLayout
         android:id="@+id/layout_activity_title"

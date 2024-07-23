@@ -1,4 +1,4 @@
-package com.mariejuana.gradecalculator.ui.screens.categories
+package com.mariejuana.gradecalculator.ui.screens.main.categories
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
