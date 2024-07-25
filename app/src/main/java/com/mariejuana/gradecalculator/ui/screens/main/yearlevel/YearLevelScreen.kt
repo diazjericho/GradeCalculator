@@ -62,8 +62,7 @@ class YearLevelScreen : AppCompatActivity(), AddYearLevelDialog.RefreshDataInter
         return YearLevel(
             id = yearLevelModel.id.toHexString(),
             yearLevel = yearLevelModel.yearLevel,
-            startAcademicYear = yearLevelModel.startAcademicYear,
-            endAcademicYear = yearLevelModel.endAcademicYear
+            academicYear = yearLevelModel.academicYear
         )
     }
 

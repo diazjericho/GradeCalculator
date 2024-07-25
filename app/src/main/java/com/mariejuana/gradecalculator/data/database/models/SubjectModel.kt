@@ -9,6 +9,8 @@ import org.mongodb.kbson.ObjectId
 class SubjectModel : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId()
+    var yearLevel: String = ""
+    var semester: String = ""
     var name: String = ""
     var code: String = ""
     var listCategory: RealmList<CategoryModel> = realmListOf()

@@ -10,7 +10,6 @@ class YearLevelModel : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId()
     var yearLevel: String = ""
-    var startAcademicYear: String = ""
-    var endAcademicYear: String = ""
+    var academicYear: String = ""
     var listSemesterModel: RealmList<SemesterModel> = realmListOf()
 }

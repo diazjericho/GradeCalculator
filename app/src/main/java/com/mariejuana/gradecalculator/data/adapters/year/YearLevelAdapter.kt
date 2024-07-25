@@ -2,12 +2,16 @@ package com.mariejuana.gradecalculator.data.adapters.year
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ContentRvYearBinding
+import com.mariejuana.gradecalculator.ui.screens.main.semester.SemesterScreen
 
 class YearLevelAdapter(private var yearLevelList: ArrayList<YearLevel>, private var context: Context, private var yearLevelAdapterCallback: YearLevelAdapterInterface):
     RecyclerView.Adapter<YearLevelAdapter.YearLevelViewHolder>() {
@@ -19,8 +23,17 @@ class YearLevelAdapter(private var yearLevelList: ArrayList<YearLevel>, private 
         fun bind(itemData: YearLevel) {
             with(binding) {
                 textYearLevel.text = itemData.yearLevel
-                textYearAcademic.text = String.format("A.Y. ${itemData.startAcademicYear.toString()} - ${itemData.endAcademicYear.toString()}")
-                textYearGrade.text = String.format("N/A")
+
+                val academicYear = "A.Y. ${itemData.academicYear}"
+                textYearAcademic.text = String.format(academicYear)
+                textYearGrade.text = "N/A"
+
+                cvYear.setOnClickListener {
+                    var intent = Intent(context, SemesterScreen::class.java)
+                    intent.putExtra("yearLevelId", itemData.id)
+                    intent.putExtra("academicYear", academicYear)
+                    context.startActivity(intent)
+                }
             }
         }
     }

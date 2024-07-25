@@ -33,37 +33,57 @@ class RealmDatabase {
 
     // Get all semester by year
     fun getAllSemesterByYear(id: String): List<SemesterModel>? {
-        val year = realm.query<YearLevelModel>("id == $0", id).first().find()
+        val year = realm.query<YearLevelModel>("id == $0", ObjectId(id)).first().find()
         return year?.listSemesterModel
     }
 
     // Get all subject by semester
     fun getAllSubjectBySemester(id: String): List<SubjectModel>? {
-        val semester = realm.query<SemesterModel>("id == $0", id).first().find()
+        val semester = realm.query<SemesterModel>("id == $0", ObjectId(id)).first().find()
         return semester?.listSubject
     }
 
     // Get all category by subject
     fun getAllCategoryBySubject(id: String): List<CategoryModel>? {
-        val subject = realm.query<SubjectModel>("id == $0", id).first().find()
+        val subject = realm.query<SubjectModel>("id == $0", ObjectId(id)).first().find()
         return subject?.listCategory
     }
 
     // Get all activities by category
     fun getAllActivitiesByCategory(id: String): List<ActivityModel>? {
-        val category = realm.query<CategoryModel>("id == $0", id).first().find()
+        val category = realm.query<CategoryModel>("id == $0", ObjectId(id)).first().find()
         return category?.listActivity
     }
 
-    suspend fun addYearLevel(yearLevel: String, academicYearStart: String, academicYearEnd: String) {
-        realm.write {
-            val yearLevelDetails = YearLevelModel().apply {
-                this.yearLevel = yearLevel
-                this.startAcademicYear = academicYearStart
-                this.endAcademicYear = academicYearEnd
-            }
+    suspend fun addYearLevel(yearLevel: String, academicYear: String) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val yearLevelDetails = YearLevelModel().apply {
+                    this.yearLevel = yearLevel
+                    this.academicYear = academicYear
+                }
 
-            copyToRealm(yearLevelDetails)
+                copyToRealm(yearLevelDetails)
+            }
+        }
+    }
+
+    suspend fun addSemester(yearLevel: String, semesterName: String, academicYear: String) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevel)).first().find()
+
+                if (yearLevelResult != null) {
+                    val semesterDetails = SemesterModel().apply {
+                        this.yearLevel = yearLevel
+                        this.semester = semesterName
+                        this.academicYear = academicYear
+                    }
+
+                    val saveSemesterDetails = copyToRealm(semesterDetails)
+                    findLatest(yearLevelResult)?.listSemesterModel?.add(saveSemesterDetails)
+                }
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
-package com.mariejuana.gradecalculator.ui.screens.dialog.year
+package com.mariejuana.gradecalculator.ui.screens.dialog.semester
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
+import com.mariejuana.gradecalculator.databinding.DialogAddSemesterBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddYearBinding
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -16,8 +18,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AddYearLevelDialog : DialogFragment() {
-    private lateinit var binding: DialogAddYearBinding
+class AddSemesterDialog : DialogFragment() {
+    private lateinit var binding: DialogAddSemesterBinding
     lateinit var refreshDataCallback: RefreshDataInterface
     private var database = RealmDatabase()
 
@@ -34,41 +36,35 @@ class AddYearLevelDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogAddYearBinding.inflate(layoutInflater,container,false)
+        binding = DialogAddSemesterBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bundle = arguments
+        val yearLevelId = bundle!!.getString("yearLevelId")
+        val academicYear = bundle!!.getString("academicYear")
+
         with(binding) {
             buttonAdd.setOnClickListener {
-                if (textYearLevel.text.isNullOrEmpty()) {
-                    textYearLevel.error = "Required"
-                    return@setOnClickListener
-                }
-
-                if (textInputYearStart.text.isNullOrEmpty()) {
-                    textInputYearStart.error = "Required"
-                    return@setOnClickListener
-                }
-
-                if (textInputYearEnd.text.isNullOrEmpty()) {
-                    textInputYearEnd.error = "Required"
+                if (textSemesterLevel.text.isNullOrEmpty()) {
+                    textSemesterLevel.error = "Required"
                     return@setOnClickListener
                 }
 
                 val coroutineContext = Job() + Dispatchers.IO
                 val scope = CoroutineScope(coroutineContext + CoroutineName("addYearLevelDetails"))
                 scope.launch(Dispatchers.IO) {
-                    val yearLevel = textYearLevel.text.toString()
-                    val academicYearStart = textInputYearStart.text.toString()
-                    val academicYearEnd = textInputYearEnd.text.toString()
-                    val academicYear = "${academicYearStart} - ${academicYearEnd}"
+                    val semesterYear = textSemesterLevel.text.toString()
 
-                    database.addYearLevel(yearLevel, academicYear)
+                    if (yearLevelId != null) {
+                        database.addSemester(yearLevelId.toString(), semesterYear, academicYear.toString())
+                        Log.d("tag", "ID: ${yearLevelId} ${semesterYear}")
+                    }
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(activity, "Year level has been added!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "Semester has been added!", Toast.LENGTH_LONG).show()
                         refreshDataCallback.refreshData()
                         dialog?.dismiss()
                     }
