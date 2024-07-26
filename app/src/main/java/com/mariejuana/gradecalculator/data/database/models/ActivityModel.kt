@@ -9,7 +9,16 @@ import org.mongodb.kbson.ObjectId
 class ActivityModel : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId()
-    var name: String = ""
+    var yearLevel: String = ""
+    var semesterId: String = ""
+    var semesterName: String = ""
+    var academicYear: String = ""
+    var subjectName: String = ""
+    var subjectCode: String = ""
+    var subjectUnits: Float = 0.0F
+    var categoryName: String = ""
+    var percentage: Float = 0.0F
+    var activityName: String = ""
     var score: Float = 0.0F
     var totalScore: Float = 0.0F
 }

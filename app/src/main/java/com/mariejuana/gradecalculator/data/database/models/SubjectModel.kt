@@ -10,9 +10,12 @@ class SubjectModel : RealmObject {
     @PrimaryKey
     var id: ObjectId = ObjectId()
     var yearLevel: String = ""
-    var semester: String = ""
+    var semesterId: String = ""
+    var semesterName: String = ""
+    var academicYear: String = ""
     var name: String = ""
     var code: String = ""
+    var units: Float = 0.0F
     var listCategory: RealmList<CategoryModel> = realmListOf()
 }
 

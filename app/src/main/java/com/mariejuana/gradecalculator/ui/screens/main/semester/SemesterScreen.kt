@@ -54,8 +54,6 @@ class SemesterScreen : AppCompatActivity(), AddSemesterDialog.RefreshDataInterfa
         binding.cvSemester.adapter = adapter
 
         binding.fabAdd.setOnClickListener {
-
-
             val addSemesterDialog = AddSemesterDialog()
             addSemesterDialog.refreshDataCallback = this
             addSemesterDialog.arguments = bundle

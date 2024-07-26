@@ -86,4 +86,86 @@ class RealmDatabase {
             }
         }
     }
+
+    suspend fun addSubject(yearLevel: String, semesterName: String, semesterId: String, academicYear: String,
+                           subjectName: String, subjectCode: String, subjectUnits: Float) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
+
+                if (semesterResult != null) {
+                    val subjectDetails = SubjectModel().apply {
+                        this.yearLevel = yearLevel
+                        this.semesterName = semesterName
+                        this.semesterId = semesterId
+                        this.academicYear = academicYear
+                        this.name = subjectName
+                        this.code = subjectCode
+                        this.units = subjectUnits
+                    }
+
+                    val saveSubjectDetails = copyToRealm(subjectDetails)
+                    findLatest(semesterResult)?.listSubject?.add(saveSubjectDetails)
+                }
+            }
+        }
+    }
+
+    suspend fun addCategory(yearLevel: String, semesterName: String, semesterId: String, academicYear: String,
+                           subjectName: String, subjectCode: String, subjectUnits: Float,
+                            categoryName: String, percentage: Float) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(semesterName)).first().find()
+
+                if (subjectResult != null) {
+                    val categoryDetails = CategoryModel().apply {
+                        this.yearLevel = yearLevel
+                        this.semesterName = semesterName
+                        this.semesterId = semesterId
+                        this.academicYear = academicYear
+                        this.subjectName = subjectName
+                        this.subjectCode = subjectCode
+                        this.subjectUnits = subjectUnits
+                        this.categoryName = categoryName
+                        this.percentage = percentage
+                    }
+
+                    val saveCategoryDetails = copyToRealm(categoryDetails)
+                    findLatest(subjectResult)?.listCategory?.add(saveCategoryDetails)
+                }
+            }
+        }
+    }
+
+    suspend fun addActivity(yearLevel: String, semesterName: String, semesterId: String, academicYear: String,
+                            subjectName: String, subjectCode: String, subjectUnits: Float,
+                            categoryName: String, percentage: Float,
+                            activityName: String, score: Float, totalScore: Float) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(semesterName)).first().find()
+
+                if (categoryResult != null) {
+                    val activityDetails = ActivityModel().apply {
+                        this.yearLevel = yearLevel
+                        this.semesterName = semesterName
+                        this.semesterId = semesterId
+                        this.academicYear = academicYear
+                        this.subjectName = subjectName
+                        this.subjectCode = subjectCode
+                        this.subjectUnits = subjectUnits
+                        this.categoryName = categoryName
+                        this.percentage = percentage
+                        this.activityName = activityName
+                        this.score = score
+                        this.totalScore = totalScore
+                    }
+
+                    val saveActivityDetails = copyToRealm(activityDetails)
+                    findLatest(categoryResult)?.listActivity?.add(saveActivityDetails)
+                }
+            }
+        }
+    }
 }

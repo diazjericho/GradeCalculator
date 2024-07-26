@@ -13,6 +13,7 @@ import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ContentRvSemesterBinding
 import com.mariejuana.gradecalculator.databinding.ContentRvYearBinding
 import com.mariejuana.gradecalculator.ui.screens.main.semester.SemesterScreen
+import com.mariejuana.gradecalculator.ui.screens.main.subjects.SubjectScreen
 
 class SemesterAdapter(private var semesterList: ArrayList<Semester>, private var context: Context, private var semesterAdapterCallback: SemesterAdapterInterface):
     RecyclerView.Adapter<SemesterAdapter.SemesterViewHolder>() {
@@ -24,8 +25,19 @@ class SemesterAdapter(private var semesterList: ArrayList<Semester>, private var
     inner class SemesterViewHolder(private val binding: ContentRvSemesterBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(itemData: Semester) {
             with(binding) {
+                val academicYear = "A.Y. ${itemData.academicYear}"
+
                 textSemesterLevel.text = itemData.semester
                 textYearAcademic.text = itemData.academicYear
+
+                cvSemester.setOnClickListener {
+                    var intent = Intent(context, SubjectScreen::class.java)
+                    intent.putExtra("semesterId", itemData.id)
+                    intent.putExtra("semesterName", itemData.semester)
+                    intent.putExtra("yearLevelId", itemData.yearLevel)
+                    intent.putExtra("academicYear", academicYear)
+                    context.startActivity(intent)
+                }
             }
         }
     }
