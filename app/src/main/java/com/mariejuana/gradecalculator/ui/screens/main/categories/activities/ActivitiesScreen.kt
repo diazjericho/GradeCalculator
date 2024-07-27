@@ -63,40 +63,7 @@ class ActivitiesScreen : AppCompatActivity(), AddActivityDialog.RefreshDataInter
 
         binding.textCategoryDetails.text = "${subjectName} (${subjectCode}) | ${categoryName}"
 
-        val activity: List<ActivityModel>? = categoryId?.let { getActivityDetails(it) }
-
-        var totalScoreSum = 0.0F
-        var achievedScoreSum = 0.0F
-
-        val activityNameBuilder = StringBuilder()
-        val activityScoreBuilder = StringBuilder()
-
-        if (activity.isNullOrEmpty()) {
-            activityNameBuilder.append("N/A")
-            activityScoreBuilder.append("N/A")
-        }
-
-        activity?.forEachIndexed { index, activityItem ->
-            activityNameBuilder.append("${activityItem.activityName}")
-            activityScoreBuilder.append("${String.format("%.2f", activityItem.score)} / ${String.format("%.2f", activityItem.totalScore)}")
-            totalScoreSum += activityItem.totalScore
-            achievedScoreSum += activityItem.score
-
-            if (index < activity.size - 1) {
-                activityNameBuilder.append("\n")
-                activityScoreBuilder.append("\n")
-            }
-        }
-
-        binding.textScore.text = "${String.format("%.2f", achievedScoreSum)} / ${String.format("%.2f", totalScoreSum)}"
-
-        val totalPercentage = categoryPercentage
-        val percentage = (achievedScoreSum / totalScoreSum) * totalPercentage!!
-        if (percentage.isNaN()) {
-            binding.textPercentage.text = "0% / ${String.format("%.2f", totalPercentage)}%"
-        } else {
-            binding.textPercentage.text = "${String.format("%.2f", percentage)}% / ${String.format("%.2f", totalPercentage)}%"
-        }
+        updateScorePercentage()
 
         activityList = arrayListOf()
 
@@ -118,10 +85,12 @@ class ActivitiesScreen : AppCompatActivity(), AddActivityDialog.RefreshDataInter
     override fun onResume() {
         super.onResume()
         getActivities()
+        updateScorePercentage()
     }
 
     override fun refreshData() {
         getActivities()
+        updateScorePercentage()
     }
 
     private fun mapActivityDetails(activityModel: ActivityModel): Activity {
@@ -168,5 +137,46 @@ class ActivitiesScreen : AppCompatActivity(), AddActivityDialog.RefreshDataInter
 
     private fun getActivityDetails(categoryId: String): List<ActivityModel>? {
         return database.getAllActivitiesByCategory(categoryId)
+    }
+
+    private fun updateScorePercentage() {
+        val extras = intent.extras
+        val categoryId = extras?.getString("categoryId")
+        val categoryPercentage = extras?.getFloat("categoryPercentage")
+
+        val activity: List<ActivityModel>? = categoryId?.let { getActivityDetails(it) }
+
+        var totalScoreSum = 0.0F
+        var achievedScoreSum = 0.0F
+
+        val activityNameBuilder = StringBuilder()
+        val activityScoreBuilder = StringBuilder()
+
+        if (activity.isNullOrEmpty()) {
+            activityNameBuilder.append("N/A")
+            activityScoreBuilder.append("N/A")
+        }
+
+        activity?.forEachIndexed { index, activityItem ->
+            activityNameBuilder.append("${activityItem.activityName}")
+            activityScoreBuilder.append("${String.format("%.2f", activityItem.score)} / ${String.format("%.2f", activityItem.totalScore)}")
+            totalScoreSum += activityItem.totalScore
+            achievedScoreSum += activityItem.score
+
+            if (index < activity.size - 1) {
+                activityNameBuilder.append("\n")
+                activityScoreBuilder.append("\n")
+            }
+        }
+
+        binding.textScore.text = "${String.format("%.2f", achievedScoreSum)} / ${String.format("%.2f", totalScoreSum)}"
+
+        val totalPercentage = categoryPercentage
+        val percentage = (achievedScoreSum / totalScoreSum) * totalPercentage!!
+        if (percentage.isNaN()) {
+            binding.textPercentage.text = "0% / ${String.format("%.2f", totalPercentage)}%"
+        } else {
+            binding.textPercentage.text = "${String.format("%.2f", percentage)}% / ${String.format("%.2f", totalPercentage)}%"
+        }
     }
 }

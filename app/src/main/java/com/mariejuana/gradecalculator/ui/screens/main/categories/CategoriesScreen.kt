@@ -53,6 +53,8 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
             bundle.putFloat("subjectUnits", subjectUnits)
         }
 
+        updateScorePercentage()
+
         categoryList = arrayListOf()
 
         adapter = CategoryAdapter(categoryList, this, this)
@@ -75,10 +77,12 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
     override fun onResume() {
         super.onResume()
         getCategory()
+        updateScorePercentage()
     }
 
     override fun refreshData() {
         getCategory()
+        updateScorePercentage()
     }
 
     private fun mapCategoryDetails(categoryModel: CategoryModel): Category {
@@ -116,6 +120,23 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
             withContext(Dispatchers.Main) {
                 adapter.updateCategoryList(categoryList)
             }
+        }
+    }
+
+    private fun updateScorePercentage() {
+        val extras = intent.extras
+        val subjectId = extras?.getString("subjectId")
+
+        if (subjectId != null) {
+            val acquiredScoreForSubject = database.getAcquiredScoreForSubject(subjectId)
+            val totalScoreForSubject = database.getTotalScoreForSubject(subjectId)
+            val acquiredPercentageForSubject = database.getAcquiredPercentageForSubject(subjectId)
+            val totalPercentageForSubject = database.getTotalPercentageForSubject(subjectId)
+
+            binding.textScore.text = "${String.format("%.2f", acquiredScoreForSubject)} / ${String.format("%.2f", totalScoreForSubject)}"
+            binding.textPercentage.text = "${String.format("%.2f", acquiredPercentageForSubject)}% / ${String.format("%.2f", totalPercentageForSubject)}%"
+        } else {
+            println("Subject not found or retrieved successfully.")
         }
     }
 }

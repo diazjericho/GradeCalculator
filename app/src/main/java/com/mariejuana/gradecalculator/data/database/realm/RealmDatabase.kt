@@ -55,6 +55,34 @@ class RealmDatabase {
         return category?.listActivity
     }
 
+    fun getAcquiredScoreForSubject(subjectId: String): Float {
+        return getAllCategoryBySubject(subjectId)?.sumByDouble { category ->
+            category.listActivity.sumByDouble { it.score.toDouble() }
+        }?.toFloat() ?: 0.0F
+    }
+
+
+    fun getTotalScoreForSubject(subjectId: String): Float {
+        return getAllCategoryBySubject(subjectId)?.sumByDouble { category ->
+            category.listActivity.sumByDouble { it.totalScore.toDouble() }
+        }?.toFloat() ?: 0.0F
+    }
+
+    fun getTotalScoreForCategory(category: CategoryModel): Float {
+        return category.listActivity.sumByDouble { it.totalScore.toDouble() }.toFloat()
+    }
+
+    fun getAcquiredPercentageForSubject(subjectId: String): Float {
+        val acquiredScore = getAcquiredScoreForSubject(subjectId)
+        val totalScore = getTotalScoreForSubject(subjectId)
+        return (acquiredScore / totalScore) * 100.0F
+    }
+
+    fun getTotalPercentageForSubject(subjectId: String): Float {
+        return getAllCategoryBySubject(subjectId)?.sumByDouble { it.percentage.toDouble() }?.toFloat()
+            ?: 0.0F
+    }
+
     suspend fun addYearLevel(yearLevel: String, academicYear: String) {
         withContext(Dispatchers.IO) {
             realm.write {
