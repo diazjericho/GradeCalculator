@@ -13,6 +13,7 @@ class CategoryModel : RealmObject {
     var semesterId: String = ""
     var semesterName: String = ""
     var academicYear: String = ""
+    var subjectId: String = ""
     var subjectName: String = ""
     var subjectCode: String = ""
     var subjectUnits: Float = 0.0F

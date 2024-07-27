@@ -25,7 +25,7 @@ class SemesterAdapter(private var semesterList: ArrayList<Semester>, private var
     inner class SemesterViewHolder(private val binding: ContentRvSemesterBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(itemData: Semester) {
             with(binding) {
-                val academicYear = "A.Y. ${itemData.academicYear}"
+                val academicYear = "${itemData.academicYear}"
 
                 textSemesterLevel.text = itemData.semester
                 textYearAcademic.text = itemData.academicYear

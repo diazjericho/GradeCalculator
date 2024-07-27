@@ -13,9 +13,11 @@ class ActivityModel : RealmObject {
     var semesterId: String = ""
     var semesterName: String = ""
     var academicYear: String = ""
+    var subjectId: String = ""
     var subjectName: String = ""
     var subjectCode: String = ""
     var subjectUnits: Float = 0.0F
+    var categoryId: String = ""
     var categoryName: String = ""
     var percentage: Float = 0.0F
     var activityName: String = ""

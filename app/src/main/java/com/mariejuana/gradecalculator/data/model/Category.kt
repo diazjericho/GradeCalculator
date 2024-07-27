@@ -6,9 +6,10 @@ data class Category(
     val semesterId: String,
     val semesterName: String,
     val academicYear: String,
+    val subjectId: String,
     val subjectName: String,
     val subjectCode: String,
-    val subjectunits: Float,
+    val subjectUnits: Float,
     val categoryName: String,
     val percentage: Float
 )

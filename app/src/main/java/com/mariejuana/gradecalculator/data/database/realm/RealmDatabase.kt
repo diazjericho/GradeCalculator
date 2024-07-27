@@ -112,11 +112,11 @@ class RealmDatabase {
     }
 
     suspend fun addCategory(yearLevel: String, semesterName: String, semesterId: String, academicYear: String,
-                           subjectName: String, subjectCode: String, subjectUnits: Float,
+                           subjectId: String, subjectName: String, subjectCode: String, subjectUnits: Float,
                             categoryName: String, percentage: Float) {
         withContext(Dispatchers.IO) {
             realm.write {
-                val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(semesterName)).first().find()
+                val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subjectId)).first().find()
 
                 if (subjectResult != null) {
                     val categoryDetails = CategoryModel().apply {
@@ -124,6 +124,7 @@ class RealmDatabase {
                         this.semesterName = semesterName
                         this.semesterId = semesterId
                         this.academicYear = academicYear
+                        this.subjectId = subjectId
                         this.subjectName = subjectName
                         this.subjectCode = subjectCode
                         this.subjectUnits = subjectUnits
@@ -139,12 +140,12 @@ class RealmDatabase {
     }
 
     suspend fun addActivity(yearLevel: String, semesterName: String, semesterId: String, academicYear: String,
-                            subjectName: String, subjectCode: String, subjectUnits: Float,
-                            categoryName: String, percentage: Float,
+                            subjectId: String, subjectName: String, subjectCode: String, subjectUnits: Float,
+                            categoryId: String, categoryName: String, percentage: Float,
                             activityName: String, score: Float, totalScore: Float) {
         withContext(Dispatchers.IO) {
             realm.write {
-                val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(semesterName)).first().find()
+                val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(categoryId)).first().find()
 
                 if (categoryResult != null) {
                     val activityDetails = ActivityModel().apply {
@@ -152,9 +153,11 @@ class RealmDatabase {
                         this.semesterName = semesterName
                         this.semesterId = semesterId
                         this.academicYear = academicYear
+                        this.subjectId = subjectId
                         this.subjectName = subjectName
                         this.subjectCode = subjectCode
                         this.subjectUnits = subjectUnits
+                        this.categoryId = categoryId
                         this.categoryName = categoryName
                         this.percentage = percentage
                         this.activityName = activityName

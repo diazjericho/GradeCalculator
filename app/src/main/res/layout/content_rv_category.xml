@@ -31,7 +31,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.45"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/text_category_name"
@@ -45,7 +45,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.65"
                 android:orientation="vertical"
                 android:gravity="end">
                 <TextView

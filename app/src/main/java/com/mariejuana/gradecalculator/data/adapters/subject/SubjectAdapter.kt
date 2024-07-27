@@ -14,7 +14,9 @@ import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ContentRvSemesterBinding
 import com.mariejuana.gradecalculator.databinding.ContentRvSubjectBinding
 import com.mariejuana.gradecalculator.databinding.ContentRvYearBinding
+import com.mariejuana.gradecalculator.ui.screens.main.categories.CategoriesScreen
 import com.mariejuana.gradecalculator.ui.screens.main.semester.SemesterScreen
+import com.mariejuana.gradecalculator.ui.screens.main.subjects.SubjectScreen
 
 class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var context: Context, private var subjectAdapterCallback: SubjectAdapterInterface):
     RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder>() {
@@ -28,6 +30,19 @@ class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var co
             with(binding) {
                 textSubjectName.text = itemData.subjectName
                 textSubjectCode.text = "${itemData.subjectCode} / ${itemData.subjectUnits}"
+
+                cvSubject.setOnClickListener {
+                    var intent = Intent(context, CategoriesScreen::class.java)
+                    intent.putExtra("semesterId", itemData.semesterId)
+                    intent.putExtra("semesterName", itemData.semesterName)
+                    intent.putExtra("yearLevelId", itemData.yearLevel)
+                    intent.putExtra("academicYear", itemData.academicYear)
+                    intent.putExtra("subjectId", itemData.id)
+                    intent.putExtra("subjectName", itemData.subjectName)
+                    intent.putExtra("subjectCode", itemData.subjectCode)
+                    intent.putExtra("subjectUnits", itemData.subjectUnits)
+                    context.startActivity(intent)
+                }
             }
         }
     }
