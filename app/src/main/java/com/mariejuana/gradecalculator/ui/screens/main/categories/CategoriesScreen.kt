@@ -1,11 +1,13 @@
 package com.mariejuana.gradecalculator.ui.screens.main.categories
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.Visibility
 import com.mariejuana.gradecalculator.R
 import com.mariejuana.gradecalculator.data.adapters.category.CategoryAdapter
 import com.mariejuana.gradecalculator.data.database.models.CategoryModel
@@ -119,6 +121,14 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
             }
             withContext(Dispatchers.Main) {
                 adapter.updateCategoryList(categoryList)
+
+                if (categoryList.isEmpty()) {
+                    binding.cvSubject.visibility = View.GONE
+                    binding.noItemsFound.visibility = View.VISIBLE
+                } else {
+                    binding.cvSubject.visibility = View.VISIBLE
+                    binding.noItemsFound.visibility = View.GONE
+                }
             }
         }
     }
@@ -134,7 +144,12 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
             val totalPercentageForSubject = database.getTotalPercentageForSubject(subjectId)
 
             binding.textScore.text = "${String.format("%.2f", acquiredScoreForSubject)} / ${String.format("%.2f", totalScoreForSubject)}"
-            binding.textPercentage.text = "${String.format("%.2f", acquiredPercentageForSubject)}% / ${String.format("%.2f", totalPercentageForSubject)}%"
+            if (acquiredPercentageForSubject.isNaN()) {
+                binding.textPercentage.text = "0% / ${String.format("%.2f", totalPercentageForSubject)}%"
+            } else {
+                binding.textPercentage.text = "${String.format("%.2f", acquiredPercentageForSubject)}% / ${String.format("%.2f", totalPercentageForSubject)}%"
+            }
+
         } else {
             println("Subject not found or retrieved successfully.")
         }

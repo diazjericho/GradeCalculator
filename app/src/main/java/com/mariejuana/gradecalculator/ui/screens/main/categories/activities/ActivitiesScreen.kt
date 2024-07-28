@@ -1,6 +1,7 @@
 package com.mariejuana.gradecalculator.ui.screens.main.categories.activities
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -131,6 +132,14 @@ class ActivitiesScreen : AppCompatActivity(), AddActivityDialog.RefreshDataInter
             }
             withContext(Dispatchers.Main) {
                 adapter.updateActivityList(activityList)
+
+                if (activityList.isEmpty()) {
+                    binding.cvActivities.visibility = View.GONE
+                    binding.noItemsFound.visibility = View.VISIBLE
+                } else {
+                    binding.cvActivities.visibility = View.VISIBLE
+                    binding.noItemsFound.visibility = View.GONE
+                }
             }
         }
     }

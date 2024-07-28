@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.Semester
 import com.mariejuana.gradecalculator.data.model.Subject
 import com.mariejuana.gradecalculator.data.model.YearLevel
@@ -21,6 +22,7 @@ import com.mariejuana.gradecalculator.ui.screens.main.subjects.SubjectScreen
 class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var context: Context, private var subjectAdapterCallback: SubjectAdapterInterface):
     RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder>() {
 
+    private var database = RealmDatabase()
     interface SubjectAdapterInterface {
         // Add view etc
     }
@@ -30,6 +32,13 @@ class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var co
             with(binding) {
                 textSubjectName.text = itemData.subjectName
                 textSubjectCode.text = "${itemData.subjectCode} / ${itemData.subjectUnits}"
+
+                val acquiredPercentageForSubject = database.getAcquiredPercentageForSubject(itemData.id)
+                if (acquiredPercentageForSubject.isNaN()) {
+                    textSubjectGrade.text = "0%"
+                } else {
+                    textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}%"
+                }
 
                 cvSubject.setOnClickListener {
                     var intent = Intent(context, CategoriesScreen::class.java)

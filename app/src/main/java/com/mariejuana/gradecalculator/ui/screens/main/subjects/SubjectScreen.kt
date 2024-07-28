@@ -1,6 +1,7 @@
 package com.mariejuana.gradecalculator.ui.screens.main.subjects
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -107,6 +108,14 @@ class SubjectScreen : AppCompatActivity(), AddSubjectDialog.RefreshDataInterface
             }
             withContext(Dispatchers.Main) {
                 adapter.updateSubjectList(subjectList)
+
+                if (subjectList.isEmpty()) {
+                    binding.cvSubject.visibility = View.GONE
+                    binding.noItemsFound.visibility = View.VISIBLE
+                } else {
+                    binding.cvSubject.visibility = View.VISIBLE
+                    binding.noItemsFound.visibility = View.GONE
+                }
             }
         }
     }

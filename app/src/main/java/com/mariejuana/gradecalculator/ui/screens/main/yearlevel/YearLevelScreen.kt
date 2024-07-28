@@ -1,6 +1,7 @@
 package com.mariejuana.gradecalculator.ui.screens.main.yearlevel
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -79,13 +80,14 @@ class YearLevelScreen : AppCompatActivity(), AddYearLevelDialog.RefreshDataInter
             )
             withContext(Dispatchers.Main) {
                 adapter.updateYearLevelList(yearLevelList)
-//                if (petList.isEmpty()) {
-//                    binding.rvPets.visibility = View.GONE
-//                    binding.txtNoPetsAvailable.visibility = View.VISIBLE
-//                } else {
-//                    binding.txtNoPetsAvailable.visibility = View.GONE
-//                    binding.rvPets.visibility = View.VISIBLE
-//                }
+
+                if (yearLevelList.isEmpty()) {
+                    binding.cvYear.visibility = View.GONE
+                    binding.noItemsFound.visibility = View.VISIBLE
+                } else {
+                    binding.cvYear.visibility = View.VISIBLE
+                    binding.noItemsFound.visibility = View.GONE
+                }
             }
         }
     }

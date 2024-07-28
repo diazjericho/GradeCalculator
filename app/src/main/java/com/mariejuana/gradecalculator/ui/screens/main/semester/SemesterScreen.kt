@@ -2,6 +2,7 @@ package com.mariejuana.gradecalculator.ui.screens.main.semester
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -97,6 +98,14 @@ class SemesterScreen : AppCompatActivity(), AddSemesterDialog.RefreshDataInterfa
             }
             withContext(Dispatchers.Main) {
                 adapter.updateSemesterList(semesterList)
+
+                if (semesterList.isEmpty()) {
+                    binding.cvSemester.visibility = View.GONE
+                    binding.noItemsFound.visibility = View.VISIBLE
+                } else {
+                    binding.cvSemester.visibility = View.VISIBLE
+                    binding.noItemsFound.visibility = View.GONE
+                }
             }
         }
     }
