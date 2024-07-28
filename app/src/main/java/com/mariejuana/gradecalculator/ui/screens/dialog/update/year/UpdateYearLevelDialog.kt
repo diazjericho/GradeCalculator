@@ -1,4 +1,4 @@
-package com.mariejuana.gradecalculator.ui.screens.dialog.year
+package com.mariejuana.gradecalculator.ui.screens.dialog.update.year
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.databinding.DialogAddYearBinding
+import com.mariejuana.gradecalculator.databinding.DialogUpdateYearBinding
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +17,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AddYearLevelDialog : DialogFragment() {
-    private lateinit var binding: DialogAddYearBinding
+class UpdateYearLevelDialog : DialogFragment() {
+    private lateinit var binding: DialogUpdateYearBinding
     lateinit var refreshDataCallback: RefreshDataInterface
     private var database = RealmDatabase()
 
@@ -34,7 +35,7 @@ class AddYearLevelDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogAddYearBinding.inflate(layoutInflater,container,false)
+        binding = DialogUpdateYearBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 

@@ -1,4 +1,4 @@
-package com.mariejuana.gradecalculator.ui.screens.dialog.activity
+package com.mariejuana.gradecalculator.ui.screens.dialog.update.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AddActivityDialog : DialogFragment() {
+class UpdateActivityDialog : DialogFragment() {
     private lateinit var binding: DialogAddActivityBinding
     lateinit var refreshDataCallback: RefreshDataInterface
     private var database = RealmDatabase()

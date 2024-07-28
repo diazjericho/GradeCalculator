@@ -1,4 +1,4 @@
-package com.mariejuana.gradecalculator.ui.screens.dialog.category
+package com.mariejuana.gradecalculator.ui.screens.dialog.add.category
 
 import android.os.Bundle
 import android.util.Log

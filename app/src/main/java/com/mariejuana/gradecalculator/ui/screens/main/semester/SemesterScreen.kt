@@ -17,7 +17,7 @@ import com.mariejuana.gradecalculator.data.model.Semester
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ActivitySemesterScreenBinding
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
-import com.mariejuana.gradecalculator.ui.screens.dialog.semester.AddSemesterDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.add.semester.AddSemesterDialog
 import io.realm.kotlin.internal.platform.threadId
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

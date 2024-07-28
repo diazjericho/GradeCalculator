@@ -14,7 +14,7 @@ import com.mariejuana.gradecalculator.data.database.models.CategoryModel
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.Category
 import com.mariejuana.gradecalculator.databinding.ActivityCategoriesScreenBinding
-import com.mariejuana.gradecalculator.ui.screens.dialog.category.AddCategoryDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.add.category.AddCategoryDialog
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -146,8 +146,22 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
             binding.textScore.text = "${String.format("%.2f", acquiredScoreForSubject)} / ${String.format("%.2f", totalScoreForSubject)}"
             if (acquiredPercentageForSubject.isNaN()) {
                 binding.textPercentage.text = "0% / ${String.format("%.2f", totalPercentageForSubject)}%"
+                binding.textGrade.text = "N/A"
             } else {
                 binding.textPercentage.text = "${String.format("%.2f", acquiredPercentageForSubject)}% / ${String.format("%.2f", totalPercentageForSubject)}%"
+
+                when (acquiredPercentageForSubject) {
+                    in 100.01 ..acquiredPercentageForSubject.toDouble() -> binding.textGrade.text = "4.0"
+                    in 96.00..100.00 -> binding.textGrade.text = "4.0"
+                    in 90.00..95.99 -> binding.textGrade.text = "3.5"
+                    in 84.00..89.99 -> binding.textGrade.text = "3.0"
+                    in 78.00..83.99 -> binding.textGrade.text = "2.5"
+                    in 72.00..77.99 -> binding.textGrade.text = "2.0"
+                    in 66.00..71.99 -> binding.textGrade.text = "1.5"
+                    in 60.00..65.99 -> binding.textGrade.text = "1.0"
+                    in 0.00..59.99 -> binding.textGrade.text = "R"
+                    else -> binding.textGrade.text = "N/A"
+                }
             }
 
         } else {

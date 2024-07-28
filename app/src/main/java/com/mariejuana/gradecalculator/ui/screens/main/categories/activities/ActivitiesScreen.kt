@@ -13,7 +13,7 @@ import com.mariejuana.gradecalculator.data.database.models.ActivityModel
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.Activity
 import com.mariejuana.gradecalculator.databinding.ActivityActivitiesScreenBinding
-import com.mariejuana.gradecalculator.ui.screens.dialog.activity.AddActivityDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.add.activity.AddActivityDialog
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

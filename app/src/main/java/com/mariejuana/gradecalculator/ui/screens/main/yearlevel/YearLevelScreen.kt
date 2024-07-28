@@ -13,7 +13,7 @@ import com.mariejuana.gradecalculator.data.database.models.YearLevelModel
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
-import com.mariejuana.gradecalculator.ui.screens.dialog.year.AddYearLevelDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.add.year.AddYearLevelDialog
 import io.realm.kotlin.internal.REALM_FILE_EXTENSION
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
