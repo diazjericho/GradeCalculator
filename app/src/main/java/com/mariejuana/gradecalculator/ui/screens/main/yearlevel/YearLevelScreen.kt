@@ -1,5 +1,6 @@
 package com.mariejuana.gradecalculator.ui.screens.main.yearlevel
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,7 @@ import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.year.AddYearLevelDialog
+import com.mariejuana.gradecalculator.ui.screens.main.settings.SettingsScreen
 import io.realm.kotlin.internal.REALM_FILE_EXTENSION
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +49,11 @@ class YearLevelScreen : AppCompatActivity(), AddYearLevelDialog.RefreshDataInter
             val addYearLevelDialog = AddYearLevelDialog()
             addYearLevelDialog.refreshDataCallback = this
             addYearLevelDialog.show(supportFragmentManager, null)
+        }
+
+        binding.buttonSettings.setOnClickListener {
+            val intent = Intent(this, SettingsScreen::class.java)
+            this.startActivity(intent)
         }
     }
 
