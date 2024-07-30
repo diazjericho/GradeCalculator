@@ -25,6 +25,7 @@
             <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
@@ -62,6 +63,45 @@
                     android:text="N/A"/>
             </LinearLayout>
         </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/buttons_year_level_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:id="@+id/button_edit_year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="Edit" />
+
+                <Button
+                    android:id="@+id/button_remove_year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:backgroundTint="?android:attr/colorError"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="Remove" />
+
+            </LinearLayout>
+
+            <Button
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:id="@+id/button_show_semester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="Show semesters" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

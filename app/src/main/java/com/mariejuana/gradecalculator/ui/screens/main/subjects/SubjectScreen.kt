@@ -61,7 +61,7 @@ class SubjectScreen : AppCompatActivity(),
         binding.cvSubject.adapter = adapter
 
         with(binding) {
-            textListSubjects.text = "List of Subjects for ${semesterName}, ${academicYear}"
+            textListSubjects.text = "Subjects for ${semesterName} | ${academicYear}"
         }
 
         binding.fabAdd.setOnClickListener {

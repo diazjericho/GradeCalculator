@@ -15,6 +15,7 @@ import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.year.AddYearLevelDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.update.year.UpdateYearLevelDialog
 import com.mariejuana.gradecalculator.ui.screens.main.settings.SettingsScreen
 import io.realm.kotlin.internal.REALM_FILE_EXTENSION
 import kotlinx.coroutines.CoroutineName
@@ -25,7 +26,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Year
 
-class YearLevelScreen : AppCompatActivity(), AddYearLevelDialog.RefreshDataInterface, YearLevelAdapter.YearLevelAdapterInterface {
+class YearLevelScreen : AppCompatActivity(),
+    AddYearLevelDialog.RefreshDataInterface,
+    UpdateYearLevelDialog.RefreshDataInterface,
+    YearLevelAdapter.YearLevelAdapterInterface {
     private lateinit var binding: ActivityYearLevelScreenBinding
     private lateinit var yearLevelList: ArrayList<YearLevel>
     private lateinit var adapter: YearLevelAdapter
@@ -38,7 +42,7 @@ class YearLevelScreen : AppCompatActivity(), AddYearLevelDialog.RefreshDataInter
 
         yearLevelList = arrayListOf()
 
-        adapter = YearLevelAdapter(yearLevelList, this, this)
+        adapter = YearLevelAdapter(yearLevelList, this, this, this)
         getYearLevel()
 
         val layoutManager = LinearLayoutManager(this)

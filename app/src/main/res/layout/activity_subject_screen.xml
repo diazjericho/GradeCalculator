@@ -19,7 +19,7 @@
             android:id="@+id/text_list_subjects"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_margin="8dp"
             android:text="List of Subjects for 1st year, A.Y. 2023 - 2024"/>
     </LinearLayout>

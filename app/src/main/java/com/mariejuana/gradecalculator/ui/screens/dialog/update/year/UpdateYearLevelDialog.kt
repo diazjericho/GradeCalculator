@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.databinding.DialogAddYearBinding
 import com.mariejuana.gradecalculator.databinding.DialogUpdateYearBinding
+import com.mariejuana.gradecalculator.extensions.Extensions
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ class UpdateYearLevelDialog : DialogFragment() {
     private lateinit var binding: DialogUpdateYearBinding
     lateinit var refreshDataCallback: RefreshDataInterface
     private var database = RealmDatabase()
+    private var extensions = Extensions()
 
     interface RefreshDataInterface {
         fun refreshData()
@@ -42,8 +44,25 @@ class UpdateYearLevelDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bundle = arguments
+        val yearLevelId = bundle!!.getString("updateYearLevelId").toString()
+        val yearLevelName = bundle!!.getString("updateYearLevelName").toString()
+        val yearLevelAcademicYear = bundle!!.getString("updateYearLevelAcademicYear").toString()
+
+        val yearLevelExtractedAcademicYear = extensions.extractYears(yearLevelAcademicYear)
+        val yearLevelStartAcademicYear = yearLevelExtractedAcademicYear?.first
+        val yearLevelEndAcademicYear = yearLevelExtractedAcademicYear?.second
+
         with(binding) {
-            buttonAdd.setOnClickListener {
+            textYearLevel.setText(yearLevelName)
+            if (yearLevelStartAcademicYear != null) {
+                textInputYearStart.setText(yearLevelStartAcademicYear.toString())
+            }
+            if (yearLevelEndAcademicYear != null) {
+                textInputYearEnd.setText(yearLevelEndAcademicYear.toString())
+            }
+
+            buttonUpdate.setOnClickListener {
                 if (textYearLevel.text.isNullOrEmpty()) {
                     textYearLevel.error = "Required"
                     return@setOnClickListener
@@ -67,9 +86,9 @@ class UpdateYearLevelDialog : DialogFragment() {
                     val academicYearEnd = textInputYearEnd.text.toString()
                     val academicYear = "${academicYearStart} - ${academicYearEnd}"
 
-                    database.addYearLevel(yearLevel, academicYear)
+                    database.updateYear(yearLevelId, yearLevel, academicYear)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(activity, "Year level has been added!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "Year level has been updated!", Toast.LENGTH_LONG).show()
                         refreshDataCallback.refreshData()
                         dialog?.dismiss()
                     }
@@ -81,4 +100,6 @@ class UpdateYearLevelDialog : DialogFragment() {
             }
         }
     }
+
+
 }
