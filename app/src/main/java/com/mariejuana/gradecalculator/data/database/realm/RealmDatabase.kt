@@ -5,13 +5,17 @@ import com.mariejuana.gradecalculator.data.database.models.CategoryModel
 import com.mariejuana.gradecalculator.data.database.models.SemesterModel
 import com.mariejuana.gradecalculator.data.database.models.SubjectModel
 import com.mariejuana.gradecalculator.data.database.models.YearLevelModel
+import com.mariejuana.gradecalculator.data.model.Activity
 import com.mariejuana.gradecalculator.data.model.Category
+import com.mariejuana.gradecalculator.data.model.Semester
+import com.mariejuana.gradecalculator.data.model.Subject
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.mongodb.kbson.BsonObjectId.Companion.invoke
 import org.mongodb.kbson.ObjectId
 import java.lang.IllegalStateException
 import java.time.Year
@@ -195,6 +199,231 @@ class RealmDatabase {
 
                     val saveActivityDetails = copyToRealm(activityDetails)
                     findLatest(categoryResult)?.listActivity?.add(saveActivityDetails)
+                }
+            }
+        }
+    }
+
+    suspend fun updateYear(yearLevelId: String, yearLevelName: String, academicYear: String) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevelId)).first().find()
+
+                if (yearLevelResult != null) {
+                    val yearLevelExisting = findLatest(yearLevelResult)
+
+                    yearLevelExisting?.apply {
+                        this.yearLevel = yearLevelName
+                        this.academicYear = academicYear
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun updateSemester(yearLevelId: String,
+                               semesterId: String,
+                               semesterName: String,
+                               academicYear: String) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevelId)).first().find()
+
+                if (yearLevelResult != null) {
+                    val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
+
+                    if (semesterResult != null) {
+                        val semesterExisting = findLatest(semesterResult)
+
+                        semesterExisting?.apply {
+                            this.semester = semesterName
+                            this.academicYear = academicYear
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun updateSubject(semesterId: String,
+                              subjectId: String,
+                              subjectName: String,
+                              subjectCode: String,
+                              subjectUnits: Float) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
+
+                if (semesterResult != null) {
+                    val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subjectId)).first().find()
+
+                    if (subjectResult != null) {
+                        val subjectExisting = findLatest(subjectResult)
+
+                        subjectExisting?.apply {
+                            this.name = subjectName
+                            this.code = subjectCode
+                            this.units = subjectUnits
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun updateCategory(subjectId: String,
+                               categoryId: String,
+                               categoryName: String,
+                               percentage: Float) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subjectId)).first().find()
+
+                if (subjectResult != null) {
+                    val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(categoryId)).first().find()
+
+                    if (categoryResult != null) {
+                        val categoryExisting = findLatest(categoryResult)
+
+                        categoryExisting?.apply {
+                            this.categoryName = categoryName
+                            this.percentage = percentage
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun updateActivity(categoryId: String,
+                               activityId: String,
+                               activityName: String,
+                               activityScore: Float,
+                               activityTotalScore: Float) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(categoryId)).first().find()
+
+                if (categoryResult != null) {
+                    val activityResult: ActivityModel? = realm.query<ActivityModel>("id == $0", ObjectId(activityId)).first().find()
+
+                    if (activityResult != null) {
+                        val activityExisting = findLatest(activityResult)
+
+                        activityExisting?.apply {
+                            this.activityName = activityName
+                            this.score = activityScore
+                            this.totalScore = activityTotalScore
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun deleteYear(year: YearLevel) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(year.id)).first().find()
+
+                if (yearLevelResult != null) {
+                    query<CategoryModel>("id == $0", ObjectId(year.id))
+                        .first()
+                        .find()
+                        ?.let { delete(it) }
+                        ?: throw IllegalStateException("Year not found")
+                }
+            }
+        }
+    }
+
+    suspend fun deleteSemester(yearLevelId: String, semester: Semester) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevelId)).first().find()
+
+                if (yearLevelResult != null) {
+                    val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semester.id)).first().find()
+
+                    if (semesterResult != null) {
+                        val semesterExisting = findLatest(semesterResult)
+                        findLatest(yearLevelResult)?.listSemesterModel?.remove(semesterExisting!!)
+
+                        query<CategoryModel>("id == $0", ObjectId(semester.id))
+                            .first()
+                            .find()
+                            ?.let { delete(it) }
+                            ?: throw IllegalStateException("Semester not found")
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun deleteSubject(semesterId: String, subject: Subject) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
+
+                if (semesterResult != null) {
+                    val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subject.id)).first().find()
+
+                    if (subjectResult != null) {
+                        val subjectExisting = findLatest(subjectResult)
+                        findLatest(semesterResult)?.listSubject?.remove(subjectExisting!!)
+
+                        query<CategoryModel>("id == $0", ObjectId(subject.id))
+                            .first()
+                            .find()
+                            ?.let { delete(it) }
+                            ?: throw IllegalStateException("Subject not found")
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun deleteCategory(subjectId: String, category: Category) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subjectId)).first().find()
+
+                if (subjectResult != null) {
+                    val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(category.id)).first().find()
+
+                    if (categoryResult != null) {
+                        val categoryExisting = findLatest(categoryResult)
+                        findLatest(subjectResult)?.listCategory?.remove(categoryExisting!!)
+
+                        query<CategoryModel>("id == $0", ObjectId(category.id))
+                            .first()
+                            .find()
+                            ?.let { delete(it) }
+                            ?: throw IllegalStateException("Category not found")
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun deleteActivity(categoryId: String, activity: Activity) {
+        withContext(Dispatchers.IO) {
+            realm.write {
+                val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(categoryId)).first().find()
+
+                if (categoryResult != null) {
+                    val activityResult: ActivityModel? = realm.query<ActivityModel>("id == $0", ObjectId(activity.id)).first().find()
+
+                    if (activityResult != null) {
+                        val activityExisting = findLatest(activityResult)
+                        findLatest(categoryResult)?.listActivity?.remove(activityExisting!!)
+
+                        query<ActivityModel>("id == $0", ObjectId(activity.id))
+                            .first()
+                            .find()
+                            ?.let { delete(it) }
+                            ?: throw IllegalStateException("Activity not found")
+                    }
                 }
             }
         }
