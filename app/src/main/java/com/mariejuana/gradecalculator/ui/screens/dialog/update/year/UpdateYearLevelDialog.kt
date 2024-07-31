@@ -79,7 +79,7 @@ class UpdateYearLevelDialog : DialogFragment() {
                 }
 
                 val coroutineContext = Job() + Dispatchers.IO
-                val scope = CoroutineScope(coroutineContext + CoroutineName("addYearLevelDetails"))
+                val scope = CoroutineScope(coroutineContext + CoroutineName("updateYearLevelDetails"))
                 scope.launch(Dispatchers.IO) {
                     val yearLevel = textYearLevel.text.toString()
                     val academicYearStart = textInputYearStart.text.toString()

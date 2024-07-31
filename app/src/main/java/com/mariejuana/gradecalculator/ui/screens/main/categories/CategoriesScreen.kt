@@ -15,6 +15,8 @@ import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.Category
 import com.mariejuana.gradecalculator.databinding.ActivityCategoriesScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.category.AddCategoryDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.category.DeleteCategoryDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.update.category.UpdateCategoryDialog
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +24,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInterface, CategoryAdapter.CategoryAdapterInterface {
+class CategoriesScreen : AppCompatActivity(),
+    AddCategoryDialog.RefreshDataInterface,
+    UpdateCategoryDialog.RefreshDataInterface,
+    DeleteCategoryDialog.RefreshDataInterface,
+    CategoryAdapter.CategoryAdapterInterface {
     private lateinit var binding: ActivityCategoriesScreenBinding
     private lateinit var categoryList: ArrayList<Category>
     private lateinit var adapter: CategoryAdapter
@@ -59,7 +65,7 @@ class CategoriesScreen : AppCompatActivity(), AddCategoryDialog.RefreshDataInter
 
         categoryList = arrayListOf()
 
-        adapter = CategoryAdapter(categoryList, this, this)
+        adapter = CategoryAdapter(categoryList, this, this, this, this)
         getCategory()
 
         val layoutManager = LinearLayoutManager(this)

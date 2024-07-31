@@ -18,6 +18,8 @@ import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ActivitySemesterScreenBinding
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.semester.AddSemesterDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.semester.DeleteSemesterDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.update.semester.UpdateSemesterDialog
 import io.realm.kotlin.internal.platform.threadId
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +28,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SemesterScreen : AppCompatActivity(), AddSemesterDialog.RefreshDataInterface, SemesterAdapter.SemesterAdapterInterface {
+class SemesterScreen : AppCompatActivity(),
+    AddSemesterDialog.RefreshDataInterface,
+    UpdateSemesterDialog.RefreshDataInterface,
+    DeleteSemesterDialog.RefreshDataInterface,
+    SemesterAdapter.SemesterAdapterInterface {
     private lateinit var binding: ActivitySemesterScreenBinding
     private lateinit var semesterList: ArrayList<Semester>
     private lateinit var adapter: SemesterAdapter
@@ -39,6 +45,7 @@ class SemesterScreen : AppCompatActivity(), AddSemesterDialog.RefreshDataInterfa
 
         val extras = intent.extras
         val yearLevelId = extras?.getString("yearLevelId")
+        val yearLevelName = extras?.getString("yearLevelName")
         val academicYear = extras?.getString("academicYear")
 
         val bundle = Bundle()
@@ -47,7 +54,7 @@ class SemesterScreen : AppCompatActivity(), AddSemesterDialog.RefreshDataInterfa
 
         semesterList = arrayListOf()
 
-        adapter = SemesterAdapter(semesterList, this, this)
+        adapter = SemesterAdapter(semesterList, this, this, this, this)
         getSemester()
 
         val layoutManager = LinearLayoutManager(this)
@@ -60,6 +67,8 @@ class SemesterScreen : AppCompatActivity(), AddSemesterDialog.RefreshDataInterfa
             addSemesterDialog.arguments = bundle
             addSemesterDialog.show(supportFragmentManager, null)
         }
+
+        binding.textSemesterName.text = "Semesters for ${yearLevelName}"
     }
 
     override fun onResume() {

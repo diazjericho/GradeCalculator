@@ -1,10 +1,8 @@
 package com.mariejuana.gradecalculator.data.adapters.year
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ContentRvYearBinding
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.year.DeleteYearLevelDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.year.UpdateYearLevelDialog
 import com.mariejuana.gradecalculator.ui.screens.main.semester.SemesterScreen
 
 class YearLevelAdapter(private var yearLevelList: ArrayList<YearLevel>,
                        private var context: Context,
                        private var yearLevelAdapterCallback: YearLevelAdapterInterface,
-                       private val refreshDataInterface: UpdateYearLevelDialog.RefreshDataInterface):
+                       private val refreshDataInterface: UpdateYearLevelDialog.RefreshDataInterface,
+                       private val refreshDataInterfaceDelete: DeleteYearLevelDialog.RefreshDataInterface):
     RecyclerView.Adapter<YearLevelAdapter.YearLevelViewHolder>() {
     private var database = RealmDatabase()
     private var buttonsVisible = false
@@ -73,12 +73,23 @@ class YearLevelAdapter(private var yearLevelList: ArrayList<YearLevel>,
                 buttonShowSemester.setOnClickListener {
                     var intent = Intent(context, SemesterScreen::class.java)
                     intent.putExtra("yearLevelId", itemData.id)
+                    intent.putExtra("yearLevelName", itemData.yearLevel)
                     intent.putExtra("academicYear", academicYear)
                     context.startActivity(intent)
                 }
 
                 buttonRemoveYear.setOnClickListener {
+                    val deleteYearDialog = DeleteYearLevelDialog()
+                    val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
 
+                    val bundle = Bundle()
+                    bundle.putString("deleteYearLevelId", itemData.id)
+                    bundle.putString("deleteYearLevelName", itemData.yearLevel)
+                    bundle.putString("deleteYearLevelAcademicYear", itemData.academicYear)
+
+                    deleteYearDialog.refreshDataCallback = refreshDataInterfaceDelete
+                    deleteYearDialog.arguments = bundle
+                    deleteYearDialog.show(manager, null)
                 }
             }
         }

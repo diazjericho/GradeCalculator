@@ -88,6 +88,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:text="Update academic year"/>
+            android:text="Update year level"/>
     </LinearLayout>
 </LinearLayout>

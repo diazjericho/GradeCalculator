@@ -13,6 +13,7 @@ import com.mariejuana.gradecalculator.databinding.DialogAddCategoryBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddSemesterBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddSubjectBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddYearBinding
+import com.mariejuana.gradecalculator.databinding.DialogUpdateCategoryBinding
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UpdateCategoryDialog : DialogFragment() {
-    private lateinit var binding: DialogAddCategoryBinding
+    private lateinit var binding: DialogUpdateCategoryBinding
     lateinit var refreshDataCallback: RefreshDataInterface
     private var database = RealmDatabase()
 
@@ -38,7 +39,7 @@ class UpdateCategoryDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogAddCategoryBinding.inflate(layoutInflater,container,false)
+        binding = DialogUpdateCategoryBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 
@@ -46,16 +47,17 @@ class UpdateCategoryDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val bundle = arguments
-        val yearLevelId = bundle!!.getString("yearLevelId")
-        val academicYear = bundle!!.getString("academicYear")
-        val semesterId = bundle!!.getString("semesterId")
-        val semesterName = bundle!!.getString("semesterName")
-        val subjectId = bundle!!.getString("subjectId")
-        val subjectName = bundle!!.getString("subjectName")
-        val subjectCode = bundle!!.getString("subjectCode")
-        val subjectUnits = bundle!!.getFloat("subjectUnits")
+        val yearLevelId = bundle!!.getString("updateYearLevelId").toString()
+        val semesterId = bundle!!.getString("updateSemesterId").toString()
+        val subjectId = bundle!!.getString("updateSubjectId").toString()
+        val categoryId = bundle!!.getString("updateCategoryId").toString()
+        val categoryName = bundle!!.getString("updateCategoryName").toString()
+        val categoryPercentage = bundle!!.getFloat("updateCategoryPercentage").toString()
 
         with(binding) {
+            textInputCategoryName.setText(categoryName)
+            textInputCategoryPercentage.setText(categoryPercentage)
+
             buttonAdd.setOnClickListener {
                 if (textInputCategoryName.text.isNullOrEmpty()) {
                     textInputCategoryName.error = "Required"
@@ -72,25 +74,7 @@ class UpdateCategoryDialog : DialogFragment() {
                     val categoryName = textInputCategoryName.text.toString()
                     val categoryPercentage = textInputCategoryPercentage.text.toString().toFloat()
 
-                    if (yearLevelId != null) {
-                        if (semesterName != null) {
-                            if (semesterId != null) {
-                                if (academicYear != null) {
-                                    if (subjectId != null) {
-                                        if (subjectName != null) {
-                                            if (subjectUnits != null) {
-                                                if (subjectCode != null) {
-                                                    database.addCategory(yearLevelId, semesterName, semesterId, academicYear,
-                                                        subjectId, subjectName, subjectCode, subjectUnits.toFloat(),
-                                                        categoryName, categoryPercentage)
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    database.updateCategory(subjectId, categoryId, categoryName, categoryPercentage)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activity, "Category has been added!", Toast.LENGTH_LONG).show()
                         refreshDataCallback.refreshData()

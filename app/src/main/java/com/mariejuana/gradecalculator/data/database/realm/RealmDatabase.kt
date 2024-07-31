@@ -215,16 +215,25 @@ class RealmDatabase {
                     yearLevelExisting?.apply {
                         this.yearLevel = yearLevelName
                         this.academicYear = academicYear
+
+                        val semesterModels: List<SemesterModel> = yearLevelExisting?.listSemesterModel ?: emptyList()
+                        semesterModels.forEach { semesterModel ->
+                            semesterModel.academicYear = "A.Y. $academicYear"
+                        }
+
+                        listSemesterModel.flatMap { it.listSubject }.forEach { subjectModel ->
+                            subjectModel.academicYear = academicYear
+                        }
                     }
                 }
             }
         }
     }
 
+
     suspend fun updateSemester(yearLevelId: String,
                                semesterId: String,
-                               semesterName: String,
-                               academicYear: String) {
+                               semesterName: String) {
         withContext(Dispatchers.IO) {
             realm.write {
                 val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevelId)).first().find()
@@ -237,7 +246,11 @@ class RealmDatabase {
 
                         semesterExisting?.apply {
                             this.semester = semesterName
-                            this.academicYear = academicYear
+
+                            val subjectModels: List<SubjectModel> = semesterExisting?.listSubject ?: emptyList()
+                            subjectModels.forEach { subjectModel ->
+                                subjectModel.semesterName = semesterName
+                            }
                         }
                     }
                 }
@@ -321,13 +334,13 @@ class RealmDatabase {
         }
     }
 
-    suspend fun deleteYear(year: YearLevel) {
+    suspend fun deleteYear(yearLevelId: String) {
         withContext(Dispatchers.IO) {
             realm.write {
-                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(year.id)).first().find()
+                val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevelId)).first().find()
 
                 if (yearLevelResult != null) {
-                    query<CategoryModel>("id == $0", ObjectId(year.id))
+                    query<YearLevelModel>("id == $0", ObjectId(yearLevelId))
                         .first()
                         .find()
                         ?.let { delete(it) }
@@ -337,19 +350,19 @@ class RealmDatabase {
         }
     }
 
-    suspend fun deleteSemester(yearLevelId: String, semester: Semester) {
+    suspend fun deleteSemester(yearLevelId: String, semesterId: String) {
         withContext(Dispatchers.IO) {
             realm.write {
                 val yearLevelResult: YearLevelModel? = realm.query<YearLevelModel>("id == $0", ObjectId(yearLevelId)).first().find()
 
                 if (yearLevelResult != null) {
-                    val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semester.id)).first().find()
+                    val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
 
                     if (semesterResult != null) {
                         val semesterExisting = findLatest(semesterResult)
                         findLatest(yearLevelResult)?.listSemesterModel?.remove(semesterExisting!!)
 
-                        query<CategoryModel>("id == $0", ObjectId(semester.id))
+                        query<SemesterModel>("id == $0", ObjectId(semesterId))
                             .first()
                             .find()
                             ?.let { delete(it) }
@@ -360,19 +373,19 @@ class RealmDatabase {
         }
     }
 
-    suspend fun deleteSubject(semesterId: String, subject: Subject) {
+    suspend fun deleteSubject(semesterId: String, subjectId: String) {
         withContext(Dispatchers.IO) {
             realm.write {
                 val semesterResult: SemesterModel? = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
 
                 if (semesterResult != null) {
-                    val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subject.id)).first().find()
+                    val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subjectId)).first().find()
 
                     if (subjectResult != null) {
                         val subjectExisting = findLatest(subjectResult)
                         findLatest(semesterResult)?.listSubject?.remove(subjectExisting!!)
 
-                        query<CategoryModel>("id == $0", ObjectId(subject.id))
+                        query<SubjectModel>("id == $0", ObjectId(subjectId))
                             .first()
                             .find()
                             ?.let { delete(it) }
@@ -383,19 +396,19 @@ class RealmDatabase {
         }
     }
 
-    suspend fun deleteCategory(subjectId: String, category: Category) {
+    suspend fun deleteCategory(subjectId: String, categoryId: String) {
         withContext(Dispatchers.IO) {
             realm.write {
                 val subjectResult: SubjectModel? = realm.query<SubjectModel>("id == $0", ObjectId(subjectId)).first().find()
 
                 if (subjectResult != null) {
-                    val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(category.id)).first().find()
+                    val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(categoryId)).first().find()
 
                     if (categoryResult != null) {
                         val categoryExisting = findLatest(categoryResult)
                         findLatest(subjectResult)?.listCategory?.remove(categoryExisting!!)
 
-                        query<CategoryModel>("id == $0", ObjectId(category.id))
+                        query<CategoryModel>("id == $0", ObjectId(categoryId))
                             .first()
                             .find()
                             ?.let { delete(it) }
@@ -406,19 +419,19 @@ class RealmDatabase {
         }
     }
 
-    suspend fun deleteActivity(categoryId: String, activity: Activity) {
+    suspend fun deleteActivity(categoryId: String, activityId: String) {
         withContext(Dispatchers.IO) {
             realm.write {
                 val categoryResult: CategoryModel? = realm.query<CategoryModel>("id == $0", ObjectId(categoryId)).first().find()
 
                 if (categoryResult != null) {
-                    val activityResult: ActivityModel? = realm.query<ActivityModel>("id == $0", ObjectId(activity.id)).first().find()
+                    val activityResult: ActivityModel? = realm.query<ActivityModel>("id == $0", ObjectId(activityId)).first().find()
 
                     if (activityResult != null) {
                         val activityExisting = findLatest(activityResult)
                         findLatest(categoryResult)?.listActivity?.remove(activityExisting!!)
 
-                        query<ActivityModel>("id == $0", ObjectId(activity.id))
+                        query<ActivityModel>("id == $0", ObjectId(activityId))
                             .first()
                             .find()
                             ?.let { delete(it) }

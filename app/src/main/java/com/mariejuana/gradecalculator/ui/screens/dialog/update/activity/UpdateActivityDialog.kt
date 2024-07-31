@@ -47,19 +47,20 @@ class UpdateActivityDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val bundle = arguments
-        val yearLevelId = bundle!!.getString("yearLevelId")
-        val academicYear = bundle!!.getString("academicYear")
-        val semesterId = bundle!!.getString("semesterId")
-        val semesterName = bundle!!.getString("semesterName")
-        val subjectId = bundle!!.getString("subjectId")
-        val subjectName = bundle!!.getString("subjectName")
-        val subjectCode = bundle!!.getString("subjectCode")
-        val subjectUnits = bundle!!.getFloat("subjectUnits")
-        val categoryId = bundle!!.getString("categoryId")
-        val categoryName = bundle!!.getString("categoryName")
-        val categoryPercentage = bundle!!.getFloat("categoryPercentage")
+        val yearLevelId = bundle!!.getString("updateYearLevelId").toString()
+        val semesterId = bundle!!.getString("updateSemesterId").toString()
+        val subjectId = bundle!!.getString("updateSubjectId").toString()
+        val categoryId = bundle!!.getString("updateCategoryId").toString()
+        val activityId = bundle!!.getString("updateActivityId").toString()
+        val activityName = bundle!!.getString("updateActivityName").toString()
+        val activityScore = bundle!!.getFloat("updateActivityScore").toString()
+        val activityTotalScore = bundle!!.getFloat("updateActivityTotalScore").toString()
 
         with(binding) {
+            textActivityName.setText(activityName)
+            textInputScore.setText(activityScore)
+            textInputTotalScore.setText(activityTotalScore)
+
             buttonAdd.setOnClickListener {
                 if (textActivityName.text.isNullOrEmpty()) {
                     textActivityName.error = "Required"
@@ -75,41 +76,15 @@ class UpdateActivityDialog : DialogFragment() {
                 }
 
                 val coroutineContext = Job() + Dispatchers.IO
-                val scope = CoroutineScope(coroutineContext + CoroutineName("addActivityDetails"))
+                val scope = CoroutineScope(coroutineContext + CoroutineName("updateActivityDetails"))
                 scope.launch(Dispatchers.IO) {
                     val activityName = textActivityName.text.toString()
-                    val activityScore = textInputScore.text.toString()
-                    val activityTotalScore = textInputTotalScore.text.toString()
+                    val activityScore = textInputScore.text.toString().toFloat()
+                    val activityTotalScore = textInputTotalScore.text.toString().toFloat()
 
-                    if (yearLevelId != null) {
-                        if (semesterName != null) {
-                            if (semesterId != null) {
-                                if (academicYear != null) {
-                                    if (subjectId != null) {
-                                        if (subjectName != null) {
-                                            if (subjectCode != null) {
-                                                if (categoryId != null) {
-                                                    if (categoryName != null) {
-                                                        activityTotalScore.toFloatOrNull()
-                                                            ?.let { it1 ->
-                                                                database.addActivity(yearLevelId, semesterName, semesterId, academicYear,
-                                                                    subjectId, subjectName, subjectCode, subjectUnits,
-                                                                    categoryId, categoryName, categoryPercentage,
-                                                                    activityName, activityScore.toFloat(),
-                                                                    it1
-                                                                )
-                                                            }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    database.updateActivity(categoryId, activityId, activityName, activityScore, activityTotalScore)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(activity, "Activity has been added!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "Activity has been updated!", Toast.LENGTH_LONG).show()
                         refreshDataCallback.refreshData()
                         dialog?.dismiss()
                     }

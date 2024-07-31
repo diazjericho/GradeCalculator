@@ -17,6 +17,7 @@ import com.mariejuana.gradecalculator.data.model.Subject
 import com.mariejuana.gradecalculator.databinding.ActivitySemesterScreenBinding
 import com.mariejuana.gradecalculator.databinding.ActivitySubjectScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.subject.AddSubjectDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.subject.DeleteSubjectDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.subject.UpdateSubjectDialog
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +29,7 @@ import kotlinx.coroutines.withContext
 class SubjectScreen : AppCompatActivity(),
     AddSubjectDialog.RefreshDataInterface,
     UpdateSubjectDialog.RefreshDataInterface,
+    DeleteSubjectDialog.RefreshDataInterface,
     SubjectAdapter.SubjectAdapterInterface {
     private lateinit var binding: ActivitySubjectScreenBinding
     private lateinit var subjectList: ArrayList<Subject>
@@ -53,7 +55,7 @@ class SubjectScreen : AppCompatActivity(),
 
         subjectList = arrayListOf()
 
-        adapter = SubjectAdapter(subjectList, this, this, this)
+        adapter = SubjectAdapter(subjectList, this, this, this, this)
         getSubject()
 
         val layoutManager = LinearLayoutManager(this)

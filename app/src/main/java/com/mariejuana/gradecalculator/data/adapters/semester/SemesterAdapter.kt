@@ -7,16 +7,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.Semester
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ContentRvSemesterBinding
 import com.mariejuana.gradecalculator.databinding.ContentRvYearBinding
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.semester.DeleteSemesterDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.year.DeleteYearLevelDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.update.semester.UpdateSemesterDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.update.year.UpdateYearLevelDialog
 import com.mariejuana.gradecalculator.ui.screens.main.semester.SemesterScreen
 import com.mariejuana.gradecalculator.ui.screens.main.subjects.SubjectScreen
 
-class SemesterAdapter(private var semesterList: ArrayList<Semester>, private var context: Context, private var semesterAdapterCallback: SemesterAdapterInterface):
+class SemesterAdapter(private var semesterList: ArrayList<Semester>,
+                      private var context: Context,
+                      private var semesterAdapterCallback: SemesterAdapterInterface,
+                      private val refreshDataInterface: UpdateSemesterDialog.RefreshDataInterface,
+                      private val refreshDataInterfaceDelete: DeleteSemesterDialog.RefreshDataInterface  ):
     RecyclerView.Adapter<SemesterAdapter.SemesterViewHolder>() {
+    private var database = RealmDatabase()
+    private var buttonsVisible = false
 
     interface SemesterAdapterInterface {
         // Add view etc
@@ -24,6 +37,10 @@ class SemesterAdapter(private var semesterList: ArrayList<Semester>, private var
 
     inner class SemesterViewHolder(private val binding: ContentRvSemesterBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(itemData: Semester) {
+            buttonsVisible = false
+            binding.buttonsSemesterAction.visibility = View.GONE
+            binding.buttonShowSubject.visibility = View.GONE
+
             with(binding) {
                 val academicYear = "${itemData.academicYear}"
 
@@ -31,6 +48,48 @@ class SemesterAdapter(private var semesterList: ArrayList<Semester>, private var
                 textYearAcademic.text = itemData.academicYear
 
                 cvSemester.setOnClickListener {
+                    if (!buttonsVisible) {
+                        buttonsSemesterAction.visibility = View.VISIBLE
+                        buttonShowSubject.visibility = View.VISIBLE
+
+                        buttonsVisible = true
+                    } else {
+                        buttonsSemesterAction.visibility = View.GONE
+                        buttonShowSubject.visibility = View.GONE
+
+                        buttonsVisible = false
+                    }
+                }
+
+                buttonEditSemester.setOnClickListener {
+                    var editSemesterDialog = UpdateSemesterDialog()
+                    val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                    val bundle = Bundle()
+                    bundle.putString("updateYearLevelId", itemData.yearLevel)
+                    bundle.putString("updateSemesterId", itemData.id)
+                    bundle.putString("updateSemesterName", itemData.semester)
+
+                    editSemesterDialog.refreshDataCallback = refreshDataInterface
+                    editSemesterDialog.arguments = bundle
+                    editSemesterDialog.show(manager, null)
+                }
+
+                buttonRemoveSemester.setOnClickListener {
+                    var editSemesterDialog = DeleteSemesterDialog()
+                    val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                    val bundle = Bundle()
+                    bundle.putString("deleteYearLevelId", itemData.yearLevel)
+                    bundle.putString("deleteSemesterId", itemData.id)
+                    bundle.putString("deleteSemesterName", itemData.semester)
+
+                    editSemesterDialog.refreshDataCallback = refreshDataInterfaceDelete
+                    editSemesterDialog.arguments = bundle
+                    editSemesterDialog.show(manager, null)
+                }
+
+                buttonShowSubject.setOnClickListener {
                     var intent = Intent(context, SubjectScreen::class.java)
                     intent.putExtra("semesterId", itemData.id)
                     intent.putExtra("semesterName", itemData.semester)

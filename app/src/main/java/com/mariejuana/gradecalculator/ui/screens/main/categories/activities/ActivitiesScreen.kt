@@ -14,6 +14,8 @@ import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.Activity
 import com.mariejuana.gradecalculator.databinding.ActivityActivitiesScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.activity.AddActivityDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.activity.DeleteActivityDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.update.activity.UpdateActivityDialog
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ActivitiesScreen : AppCompatActivity(), AddActivityDialog.RefreshDataInterface, ActivityAdapter.ActivityAdapterInterface {
+class ActivitiesScreen : AppCompatActivity(),
+    AddActivityDialog.RefreshDataInterface,
+    UpdateActivityDialog.RefreshDataInterface,
+    DeleteActivityDialog.RefreshDataInterface,
+    ActivityAdapter.ActivityAdapterInterface {
     private lateinit var binding: ActivityActivitiesScreenBinding
     private lateinit var activityList: ArrayList<Activity>
     private lateinit var adapter: ActivityAdapter
@@ -68,7 +74,7 @@ class ActivitiesScreen : AppCompatActivity(), AddActivityDialog.RefreshDataInter
 
         activityList = arrayListOf()
 
-        adapter = ActivityAdapter(activityList, this, this)
+        adapter = ActivityAdapter(activityList, this, this, this, this)
         getActivities()
 
         val layoutManager = LinearLayoutManager(this)

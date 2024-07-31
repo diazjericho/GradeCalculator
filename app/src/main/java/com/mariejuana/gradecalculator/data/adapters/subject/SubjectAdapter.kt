@@ -17,15 +17,17 @@ import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ContentRvSemesterBinding
 import com.mariejuana.gradecalculator.databinding.ContentRvSubjectBinding
 import com.mariejuana.gradecalculator.databinding.ContentRvYearBinding
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.subject.DeleteSubjectDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.subject.UpdateSubjectDialog
 import com.mariejuana.gradecalculator.ui.screens.main.categories.CategoriesScreen
 import com.mariejuana.gradecalculator.ui.screens.main.semester.SemesterScreen
 import com.mariejuana.gradecalculator.ui.screens.main.subjects.SubjectScreen
 
-class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var context: Context, private var subjectAdapterCallback: SubjectAdapterInterface,
-                     private val refreshDataInterface: UpdateSubjectDialog.RefreshDataInterface):
+class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var context: Context,
+                     private var subjectAdapterCallback: SubjectAdapterInterface,
+                     private val refreshDataInterface: UpdateSubjectDialog.RefreshDataInterface,
+                     private val refreshDataInterfaceDelete: DeleteSubjectDialog.RefreshDataInterface):
     RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder>() {
-
     private var database = RealmDatabase()
     private var buttonsVisible = false
 
@@ -86,6 +88,7 @@ class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var co
                     val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
 
                     val bundle = Bundle()
+                    bundle.putString("updateSemesterId", itemData.semesterId)
                     bundle.putString("updateSubjectId", itemData.id)
                     bundle.putString("updateSubjectName", itemData.subjectName)
                     bundle.putString("updateSubjectCode", itemData.subjectCode)
@@ -94,6 +97,22 @@ class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var co
                     editSubjectDialog.refreshDataCallback = refreshDataInterface
                     editSubjectDialog.arguments = bundle
                     editSubjectDialog.show(manager, null)
+                }
+
+                buttonRemoveSubject.setOnClickListener {
+                    var deleteSubjectDialog = DeleteSubjectDialog()
+                    val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                    val bundle = Bundle()
+                    bundle.putString("deleteSemesterId", itemData.semesterId)
+                    bundle.putString("deleteSubjectId", itemData.id)
+                    bundle.putString("deleteSubjectName", itemData.subjectName)
+                    bundle.putString("deleteSubjectCode", itemData.subjectCode)
+                    bundle.putFloat("deleteSubjectUnits", itemData.subjectUnits)
+
+                    deleteSubjectDialog.refreshDataCallback = refreshDataInterfaceDelete
+                    deleteSubjectDialog.arguments = bundle
+                    deleteSubjectDialog.show(manager, null)
                 }
 
                 buttonShowCategory.setOnClickListener {

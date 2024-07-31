@@ -1,12 +1,11 @@
 package com.mariejuana.gradecalculator.ui.screens.main.yearlevel
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import androidx.activity.enableEdgeToEdge
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mariejuana.gradecalculator.R
 import com.mariejuana.gradecalculator.data.adapters.year.YearLevelAdapter
@@ -15,20 +14,21 @@ import com.mariejuana.gradecalculator.data.database.realm.RealmDatabase
 import com.mariejuana.gradecalculator.data.model.YearLevel
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.year.AddYearLevelDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.delete.year.DeleteYearLevelDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.year.UpdateYearLevelDialog
 import com.mariejuana.gradecalculator.ui.screens.main.settings.SettingsScreen
-import io.realm.kotlin.internal.REALM_FILE_EXTENSION
+import com.mariejuana.gradecalculator.ui.theme.GradeCalculator.Companion.context
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.Year
 
 class YearLevelScreen : AppCompatActivity(),
     AddYearLevelDialog.RefreshDataInterface,
     UpdateYearLevelDialog.RefreshDataInterface,
+    DeleteYearLevelDialog.RefreshDataInterface,
     YearLevelAdapter.YearLevelAdapterInterface {
     private lateinit var binding: ActivityYearLevelScreenBinding
     private lateinit var yearLevelList: ArrayList<YearLevel>
@@ -42,7 +42,7 @@ class YearLevelScreen : AppCompatActivity(),
 
         yearLevelList = arrayListOf()
 
-        adapter = YearLevelAdapter(yearLevelList, this, this, this)
+        adapter = YearLevelAdapter(yearLevelList, this, this, this, this)
         getYearLevel()
 
         val layoutManager = LinearLayoutManager(this)
@@ -59,6 +59,9 @@ class YearLevelScreen : AppCompatActivity(),
             val intent = Intent(this, SettingsScreen::class.java)
             this.startActivity(intent)
         }
+
+        val settingIcon = binding.buttonSettings
+        updateSettingImageForTheme(settingIcon)
     }
 
     override fun onResume() {
@@ -100,6 +103,20 @@ class YearLevelScreen : AppCompatActivity(),
                     binding.noItemsFound.visibility = View.GONE
                 }
             }
+        }
+    }
+
+    private fun updateSettingImageForTheme(imgOwner: ImageView) {
+        val isDarkMode = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+
+        if (isDarkMode) {
+            imgOwner.setImageResource(R.drawable.ic_settings_white)
+        } else {
+            imgOwner.setImageResource(R.drawable.ic_settings_black)
         }
     }
 }
