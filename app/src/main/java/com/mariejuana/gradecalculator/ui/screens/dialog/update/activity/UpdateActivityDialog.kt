@@ -14,6 +14,7 @@ import com.mariejuana.gradecalculator.databinding.DialogAddCategoryBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddSemesterBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddSubjectBinding
 import com.mariejuana.gradecalculator.databinding.DialogAddYearBinding
+import com.mariejuana.gradecalculator.databinding.DialogUpdateActivityBinding
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UpdateActivityDialog : DialogFragment() {
-    private lateinit var binding: DialogAddActivityBinding
+    private lateinit var binding: DialogUpdateActivityBinding
     lateinit var refreshDataCallback: RefreshDataInterface
     private var database = RealmDatabase()
 
@@ -39,7 +40,7 @@ class UpdateActivityDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogAddActivityBinding.inflate(layoutInflater,container,false)
+        binding = DialogUpdateActivityBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 
@@ -61,7 +62,7 @@ class UpdateActivityDialog : DialogFragment() {
             textInputScore.setText(activityScore)
             textInputTotalScore.setText(activityTotalScore)
 
-            buttonAdd.setOnClickListener {
+            buttonUpdate.setOnClickListener {
                 if (textActivityName.text.isNullOrEmpty()) {
                     textActivityName.error = "Required"
                     return@setOnClickListener

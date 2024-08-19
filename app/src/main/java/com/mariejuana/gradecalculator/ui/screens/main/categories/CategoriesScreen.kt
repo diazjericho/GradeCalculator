@@ -1,5 +1,6 @@
 package com.mariejuana.gradecalculator.ui.screens.main.categories
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -140,6 +141,8 @@ class CategoriesScreen : AppCompatActivity(),
     }
 
     private fun updateScorePercentage() {
+        val sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+
         val extras = intent.extras
         val subjectId = extras?.getString("subjectId")
 
@@ -156,17 +159,29 @@ class CategoriesScreen : AppCompatActivity(),
             } else {
                 binding.textPercentage.text = "${String.format("%.2f", acquiredPercentageForSubject)}% / ${String.format("%.2f", totalPercentageForSubject)}%"
 
-                when (acquiredPercentageForSubject) {
-                    in 100.01 ..acquiredPercentageForSubject.toDouble() -> binding.textGrade.text = "4.0"
-                    in 96.00..100.00 -> binding.textGrade.text = "4.0"
-                    in 90.00..95.99 -> binding.textGrade.text = "3.5"
-                    in 84.00..89.99 -> binding.textGrade.text = "3.0"
-                    in 78.00..83.99 -> binding.textGrade.text = "2.5"
-                    in 72.00..77.99 -> binding.textGrade.text = "2.0"
-                    in 66.00..71.99 -> binding.textGrade.text = "1.5"
-                    in 60.00..65.99 -> binding.textGrade.text = "1.0"
-                    in 0.00..59.99 -> binding.textGrade.text = "R"
-                    else -> binding.textGrade.text = "N/A"
+                val disableFinalGrade = sharedPreferences.getBoolean("disableFinalGrade", false)
+
+                if (disableFinalGrade) {
+                    binding.layoutFinalGrade.visibility = View.GONE
+                    binding.textGrade.visibility = View.GONE
+                    binding.textFinalGrade.visibility = View.GONE
+                } else {
+                    binding.layoutFinalGrade.visibility = View.VISIBLE
+                    binding.textGrade.visibility = View.VISIBLE
+                    binding.textFinalGrade.visibility = View.VISIBLE
+
+                    when (acquiredPercentageForSubject) {
+                        in 100.01 ..acquiredPercentageForSubject.toDouble() -> binding.textGrade.text = "4.0"
+                        in 96.00..100.00 -> binding.textGrade.text = "4.0"
+                        in 90.00..95.99 -> binding.textGrade.text = "3.5"
+                        in 84.00..89.99 -> binding.textGrade.text = "3.0"
+                        in 78.00..83.99 -> binding.textGrade.text = "2.5"
+                        in 72.00..77.99 -> binding.textGrade.text = "2.0"
+                        in 66.00..71.99 -> binding.textGrade.text = "1.5"
+                        in 60.00..65.99 -> binding.textGrade.text = "1.0"
+                        in 0.00..59.99 -> binding.textGrade.text = "R"
+                        else -> binding.textGrade.text = "N/A"
+                    }
                 }
             }
 

@@ -30,6 +30,7 @@ class SemesterAdapter(private var semesterList: ArrayList<Semester>,
     RecyclerView.Adapter<SemesterAdapter.SemesterViewHolder>() {
     private var database = RealmDatabase()
     private var buttonsVisible = false
+    private var sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     interface SemesterAdapterInterface {
         // Add view etc
@@ -43,6 +44,32 @@ class SemesterAdapter(private var semesterList: ArrayList<Semester>,
 
             with(binding) {
                 val academicYear = "${itemData.academicYear}"
+                val totalGradeForSemester = database.getAcquiredPercentageForSemester(itemData.id)
+
+                val disableFinalGrade = sharedPreferences.getBoolean("disableFinalGrade", false)
+
+                if (disableFinalGrade) {
+                    textSemesterGrade.visibility = View.GONE
+                } else {
+                    textSemesterGrade.visibility = View.VISIBLE
+
+                    if (totalGradeForSemester.isNaN()) {
+                        textSemesterGrade.text = "0% (R)"
+                    } else {
+                        when (totalGradeForSemester) {
+                            in 100.01 ..totalGradeForSemester.toDouble() -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (4.0)"
+                            in 96.00..100.00 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (4.0)"
+                            in 90.00..95.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (3.5)"
+                            in 84.00..89.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (3.0)"
+                            in 78.00..83.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (2.5)"
+                            in 72.00..77.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (2.0)"
+                            in 66.00..71.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (1.5)"
+                            in 60.00..65.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (1.0)"
+                            in 0.00..59.99 -> binding.textSemesterGrade.text = "${String.format("%.2f", totalGradeForSemester)}% (R)"
+                            else -> binding.textSemesterGrade.text = "N/A"
+                        }
+                    }
+                }
 
                 textSemesterLevel.text = itemData.semester
                 textYearAcademic.text = itemData.academicYear

@@ -24,6 +24,7 @@ class YearLevelAdapter(private var yearLevelList: ArrayList<YearLevel>,
     RecyclerView.Adapter<YearLevelAdapter.YearLevelViewHolder>() {
     private var database = RealmDatabase()
     private var buttonsVisible = false
+    private var sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     interface YearLevelAdapterInterface {
         // Add view etc
@@ -36,11 +37,37 @@ class YearLevelAdapter(private var yearLevelList: ArrayList<YearLevel>,
             binding.buttonShowSemester.visibility = View.GONE
 
             with(binding) {
-                textYearLevel.text = itemData.yearLevel
-
                 val academicYear = "A.Y. ${itemData.academicYear}"
+                val totalGradeForYearLevel = database.getAcquiredPercentageForYearLevel(itemData.id)
+
+                textYearLevel.text = itemData.yearLevel
                 textYearAcademic.text = String.format(academicYear)
-                textYearGrade.text = "N/A"
+
+                // Show or hide the grades
+                val disableFinalGrade = sharedPreferences.getBoolean("disableFinalGrade", false)
+
+                if (disableFinalGrade) {
+                    textYearGrade.visibility = View.GONE
+                } else {
+                    textYearGrade.visibility = View.VISIBLE
+
+                    if (totalGradeForYearLevel.isNaN()) {
+                        textYearGrade.text = "0% (R)"
+                    } else {
+                        when (totalGradeForYearLevel) {
+                            in 100.01 ..totalGradeForYearLevel.toDouble() -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (4.0)"
+                            in 96.00..100.00 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (4.0)"
+                            in 90.00..95.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (3.5)"
+                            in 84.00..89.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (3.0)"
+                            in 78.00..83.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (2.5)"
+                            in 72.00..77.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (2.0)"
+                            in 66.00..71.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (1.5)"
+                            in 60.00..65.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (1.0)"
+                            in 0.00..59.99 -> binding.textYearGrade.text = "${String.format("%.2f", totalGradeForYearLevel)}% (R)"
+                            else -> binding.textYearGrade.text = "N/A"
+                        }
+                    }
+                }
 
                 cvYear.setOnClickListener {
                     if (!buttonsVisible) {

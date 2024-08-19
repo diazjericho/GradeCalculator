@@ -1,6 +1,12 @@
 # Change Logs for Grade Calculator
 If you want to go back to README file, just click [this](../README.md).
 
+## v1.2.0
+- fixed not showing summary of grades per year level, semester, etc.
+- added option to hide the summary of grades per screen
+- added about page
+- added official icon
+
 ## v1.1.0
 - fixed all bugs relating to deletion and update
 - fixed settings icon not showing properly in dark mode

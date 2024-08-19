@@ -47,6 +47,11 @@ class RealmDatabase {
         return semester?.listSubject
     }
 
+    fun searchSubject(semesterId: String, subjectDetails: String): List<SubjectModel>? {
+        val semester = realm.query<SemesterModel>("id == $0", ObjectId(semesterId)).first().find()
+        return semester?.listSubject?.filter { subject -> subject.name.lowercase().contains(subjectDetails) || subject.code.lowercase().contains(subjectDetails)}
+    }
+
     // Get all category by subject
     fun getAllCategoryBySubject(id: String): List<CategoryModel>? {
         val subject = realm.query<SubjectModel>("id == $0", ObjectId(id)).first().find()
@@ -76,15 +81,37 @@ class RealmDatabase {
         return category.listActivity.sumByDouble { it.totalScore.toDouble() }.toFloat()
     }
 
+    fun getTotalPercentageForSubject(subjectId: String): Float {
+        return getAllCategoryBySubject(subjectId)?.sumByDouble { it.percentage.toDouble() }?.toFloat()
+            ?: 0.0F
+    }
+
     fun getAcquiredPercentageForSubject(subjectId: String): Float {
         val acquiredScore = getAcquiredScoreForSubject(subjectId)
         val totalScore = getTotalScoreForSubject(subjectId)
         return (acquiredScore / totalScore) * 100.0F
     }
 
-    fun getTotalPercentageForSubject(subjectId: String): Float {
-        return getAllCategoryBySubject(subjectId)?.sumByDouble { it.percentage.toDouble() }?.toFloat()
-            ?: 0.0F
+    fun getAcquiredPercentageForSemester(semesterId: String): Float {
+        val subjects = getAllSubjectBySemester(semesterId)
+        val totalWeightedPercentage = subjects?.sumByDouble { subject ->
+            getAcquiredPercentageForSubject(subject.id.toHexString()).toDouble() * subject.units
+        } ?: 0.0
+        val totalUnits = subjects?.sumByDouble { it.units.toDouble() } ?: 1.0
+        return (totalWeightedPercentage / totalUnits).toFloat()
+    }
+
+    fun getAcquiredPercentageForYearLevel(yearLevelId: String): Float {
+        val semesters = getAllSemesterByYear(yearLevelId)
+        val totalWeightedPercentage = semesters?.sumByDouble { semester ->
+            val semesterPercentage = getAcquiredPercentageForSemester(semester.id.toHexString()).toDouble()
+            val semesterUnits = semester.listSubject.sumByDouble { it.units.toDouble() }
+            semesterPercentage * semesterUnits
+        } ?: 0.0
+        val totalUnits = semesters?.sumByDouble { semester ->
+            semester.listSubject.sumByDouble { it.units.toDouble() }
+        } ?: 1.0
+        return (totalWeightedPercentage / totalUnits).toFloat()
     }
 
     suspend fun addYearLevel(yearLevel: String, academicYear: String) {

@@ -31,14 +31,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_semester_title"
         app:layout_constraintEnd_toEndOf="parent">
-        <EditText
-            android:id="@+id/search_subjects"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/search_subject"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="subjects"
+            android:layout_height="match_parent"
             android:hint="Search subjects"
-            android:layout_margin="8dp"
-            android:inputType="text" />
+            android:layout_margin="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search_subject_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout

@@ -30,6 +30,7 @@ class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var co
     RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder>() {
     private var database = RealmDatabase()
     private var buttonsVisible = false
+    private var sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
     interface SubjectAdapterInterface {
         // Add view etc
@@ -65,21 +66,30 @@ class SubjectAdapter(private var subjectList: ArrayList<Subject>, private var co
                     }
                 }
 
-                val acquiredPercentageForSubject = database.getAcquiredPercentageForSubject(itemData.id)
-                if (acquiredPercentageForSubject.isNaN()) {
-                    textSubjectGrade.text = "0% (R)"
+                // Show or hide the grades
+                val disableFinalGrade = sharedPreferences.getBoolean("disableFinalGrade", false)
+
+                if (disableFinalGrade) {
+                    textSubjectGrade.visibility = View.GONE
                 } else {
-                    when (acquiredPercentageForSubject) {
-                        in 100.01 ..acquiredPercentageForSubject.toDouble() -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (4.0)"
-                        in 96.00..100.00 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (4.0)"
-                        in 90.00..95.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (3.5)"
-                        in 84.00..89.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (3.0)"
-                        in 78.00..83.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (2.5)"
-                        in 72.00..77.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (2.0)"
-                        in 66.00..71.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (1.5)"
-                        in 60.00..65.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (1.0)"
-                        in 0.00..59.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (R)"
-                        else -> binding.textSubjectGrade.text = "N/A"
+                    textSubjectGrade.visibility = View.VISIBLE
+
+                    val acquiredPercentageForSubject = database.getAcquiredPercentageForSubject(itemData.id)
+                    if (acquiredPercentageForSubject.isNaN()) {
+                        textSubjectGrade.text = "0% (R)"
+                    } else {
+                        when (acquiredPercentageForSubject) {
+                            in 100.01 ..acquiredPercentageForSubject.toDouble() -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (4.0)"
+                            in 96.00..100.00 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (4.0)"
+                            in 90.00..95.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (3.5)"
+                            in 84.00..89.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (3.0)"
+                            in 78.00..83.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (2.5)"
+                            in 72.00..77.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (2.0)"
+                            in 66.00..71.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (1.5)"
+                            in 60.00..65.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (1.0)"
+                            in 0.00..59.99 -> binding.textSubjectGrade.text = "${String.format("%.2f", acquiredPercentageForSubject)}% (R)"
+                            else -> binding.textSubjectGrade.text = "N/A"
+                        }
                     }
                 }
 

@@ -78,8 +78,7 @@
                         <Switch
                             android:id="@+id/switch_disable_final_grade"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"/>
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -88,75 +87,13 @@
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_settings_disable_show_final_grades"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_settings_disable_final_grade"
-        app:layout_constraintEnd_toEndOf="parent">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_activity_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            app:cardCornerRadius="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.95"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16dp"
-                            android:text="Do not show final grades"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.15"
-                        android:orientation="vertical"
-                        android:gravity="end">
-                        <Switch
-                            android:id="@+id/switch_dont_show_final_grades"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"/>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_settings_letter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_settings_disable_show_final_grades"
+        app:layout_constraintTop_toBottomOf="@id/layout_settings_disable_final_grade"
         app:layout_constraintEnd_toEndOf="parent">
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_letter"
