@@ -26,6 +26,7 @@ class RealmDatabase {
         val config = RealmConfiguration
             .Builder(schema =  setOf(YearLevelModel::class, SemesterModel::class, SubjectModel::class, CategoryModel::class, ActivityModel::class))
             .schemaVersion(1)
+            .name("study_track.realm")
             .build()
         Realm.open(config)
     }
@@ -77,19 +78,22 @@ class RealmDatabase {
         }?.toFloat() ?: 0.0F
     }
 
-    fun getTotalScoreForCategory(category: CategoryModel): Float {
-        return category.listActivity.sumByDouble { it.totalScore.toDouble() }.toFloat()
-    }
-
     fun getTotalPercentageForSubject(subjectId: String): Float {
         return getAllCategoryBySubject(subjectId)?.sumByDouble { it.percentage.toDouble() }?.toFloat()
             ?: 0.0F
     }
 
     fun getAcquiredPercentageForSubject(subjectId: String): Float {
-        val acquiredScore = getAcquiredScoreForSubject(subjectId)
-        val totalScore = getTotalScoreForSubject(subjectId)
-        return (acquiredScore / totalScore) * 100.0F
+        return getAllCategoryBySubject(subjectId)?.sumByDouble { category ->
+            val acquiredScore = category.listActivity.sumByDouble { it.score.toDouble() }
+            val totalScore = category.listActivity.sumByDouble { it.totalScore.toDouble() }
+
+            if (totalScore > 0) {
+                (acquiredScore / totalScore) * category.percentage
+            } else {
+                0.0
+            }
+        }?.toFloat() ?: 0.0F
     }
 
     fun getAcquiredPercentageForSemester(semesterId: String): Float {

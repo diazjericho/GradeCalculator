@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Grade Calculator"
+rootProject.name = "StudyTrack"
 include(":app")
  

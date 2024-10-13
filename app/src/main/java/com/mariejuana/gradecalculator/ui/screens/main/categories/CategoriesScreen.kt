@@ -185,6 +185,11 @@ class CategoriesScreen : AppCompatActivity(),
                 }
             }
 
+            if (totalPercentageForSubject.toString().toFloat() == 100F) {
+                binding.fabAdd.isEnabled = false
+            } else {
+                binding.fabAdd.isEnabled = true
+            }
         } else {
             println("Subject not found or retrieved successfully.")
         }

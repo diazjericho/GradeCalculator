@@ -1,6 +1,11 @@
 # Change Logs for Grade Calculator
 If you want to go back to README file, just click [this](../README.md).
 
+## v1.3.0
+- fixed the accuracy bug for calculating grades per subject
+- changed name to "StudyTrack"
+- added a function for backup and restore database
+
 ## v1.2.0
 - fixed not showing summary of grades per year level, semester, etc.
 - added option to hide the summary of grades per screen

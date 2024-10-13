@@ -1,6 +1,7 @@
 package com.mariejuana.gradecalculator.ui.screens.main.settings
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import com.mariejuana.gradecalculator.databinding.ActivitySettingsScreenBinding
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.settings.about.AboutDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.settings.letter.SpecialLetterDialog
+import com.mariejuana.gradecalculator.ui.screens.main.settings.backup_restore.BackupRestoreScreen
 
 class SettingsScreen : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsScreenBinding
@@ -40,6 +42,11 @@ class SettingsScreen : AppCompatActivity() {
         binding.cvShowAbout.setOnClickListener {
             val aboutDialog = AboutDialog()
             aboutDialog.show(supportFragmentManager, null)
+        }
+
+        binding.cvShowBackupRestore.setOnClickListener {
+            val intent = Intent(this, BackupRestoreScreen::class.java)
+            this.startActivity(intent)
         }
     }
 }
