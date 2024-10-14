@@ -1,9 +1,11 @@
 package com.mariejuana.gradecalculator.ui.screens.main.subjects
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,6 +24,7 @@ import com.mariejuana.gradecalculator.databinding.ActivitySubjectScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.subject.AddSubjectDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.delete.subject.DeleteSubjectDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.subject.UpdateSubjectDialog
+import com.mariejuana.gradecalculator.ui.theme.GradeCalculator.Companion.context
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,6 +71,9 @@ class SubjectScreen : AppCompatActivity(),
         with(binding) {
             textListSubjects.text = "Subjects for ${semesterName} | ${academicYear}"
         }
+
+        val noItemsFound = binding.iconNoItemsFound
+        updateImageForTheme(noItemsFound)
 
         binding.searchSubjectDetails.addTextChangedListener((object : TextWatcher,
             TextInputLayout.OnEditTextAttachedListener {
@@ -171,6 +177,20 @@ class SubjectScreen : AppCompatActivity(),
                     binding.noItemsFound.visibility = View.GONE
                 }
             }
+        }
+    }
+
+    private fun updateImageForTheme(noItemsFound: ImageView) {
+        val isDarkMode = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+
+        if (isDarkMode) {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_white)
+        } else {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_black)
         }
     }
 }

@@ -11,6 +11,7 @@ import com.mariejuana.gradecalculator.R
 import com.mariejuana.gradecalculator.databinding.ActivitySettingsScreenBinding
 import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.settings.about.AboutDialog
+import com.mariejuana.gradecalculator.ui.screens.dialog.settings.help.HelpDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.settings.letter.SpecialLetterDialog
 import com.mariejuana.gradecalculator.ui.screens.main.settings.backup_restore.BackupRestoreScreen
 
@@ -32,6 +33,11 @@ class SettingsScreen : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.putBoolean("disableFinalGrade", switchDisableFinalGrade.isChecked)
             editor.apply()
+        }
+
+        binding.cvFinalGradeOption.setOnClickListener {
+            val disableFinalGradeDialog = HelpDialog()
+            disableFinalGradeDialog.show(supportFragmentManager, null)
         }
 
         binding.cvLetter.setOnClickListener {

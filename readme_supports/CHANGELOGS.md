@@ -1,6 +1,10 @@
 # Change Logs for Grade Calculator
 If you want to go back to README file, just click [this](../README.md).
 
+## v1.3.1
+- fixed the no items icon not converting to night mode
+- fixed the functions for backup and restoring database
+
 ## v1.3.0
 - fixed the accuracy bug for calculating grades per subject
 - changed name to "StudyTrack"

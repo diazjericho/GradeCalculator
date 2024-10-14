@@ -1,8 +1,10 @@
 package com.mariejuana.gradecalculator.ui.screens.main.semester
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +22,7 @@ import com.mariejuana.gradecalculator.databinding.ActivityYearLevelScreenBinding
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.semester.AddSemesterDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.delete.semester.DeleteSemesterDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.semester.UpdateSemesterDialog
+import com.mariejuana.gradecalculator.ui.theme.GradeCalculator.Companion.context
 import io.realm.kotlin.internal.platform.threadId
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -60,6 +63,9 @@ class SemesterScreen : AppCompatActivity(),
         val layoutManager = LinearLayoutManager(this)
         binding.cvSemester.layoutManager = layoutManager
         binding.cvSemester.adapter = adapter
+
+        val noItemsFound = binding.iconNoItemsFound
+        updateImageForTheme(noItemsFound)
 
         binding.fabAdd.setOnClickListener {
             val addSemesterDialog = AddSemesterDialog()
@@ -116,6 +122,20 @@ class SemesterScreen : AppCompatActivity(),
                     binding.noItemsFound.visibility = View.GONE
                 }
             }
+        }
+    }
+
+    private fun updateImageForTheme(noItemsFound: ImageView) {
+        val isDarkMode = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+
+        if (isDarkMode) {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_white)
+        } else {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_black)
         }
     }
 }

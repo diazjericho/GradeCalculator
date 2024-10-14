@@ -33,6 +33,12 @@ class BackupRestoreScreen : AppCompatActivity() {
         binding = ActivityBackupRestoreScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.textInstructions.setText(
+            "The app offers two options, Backup and Restore:\n" +
+                    "- When performing a backup, the database will be saved to the Documents > StudyTrackBackup folder on your device.\n" +
+                    "- When restoring the database, make sure to use the same database that was backed up by the app.\n" +
+                    "Any existing data will be overwritten, and the backup file will replace the current database."
+        )
 
         binding.buttonSettingsBackup.setOnClickListener {
             // Check if permissions are granted
@@ -78,7 +84,6 @@ class BackupRestoreScreen : AppCompatActivity() {
         }
     }
 
-
     private fun backupRealm(context: Context): Boolean {
         return try {
             // Open Realm using the singleton instance
@@ -87,8 +92,8 @@ class BackupRestoreScreen : AppCompatActivity() {
             // Get the path of the Realm database file
             val realmFile = File(realm.configuration.path)
 
-            // Define the backup location (External storage)
-            val backupDir = File(context.getExternalFilesDir(null), "Documents")
+            // Define the backup location in the phone's main "Documents" folder
+            val backupDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "StudyTrackBackup")
             if (!backupDir.exists()) {
                 backupDir.mkdirs()  // Create directory if it doesn't exist
             }
@@ -118,7 +123,7 @@ class BackupRestoreScreen : AppCompatActivity() {
             RealmInstance.closeInstance() // Close any open instance before restoring
 
             // Define the backup location (where the backup file is stored)
-            val backupDir = File(context.getExternalFilesDir(null), "Documents")
+            val backupDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "StudyTrackBackup")
             val backupFile = File(backupDir, "study_track_backup.realm")
 
             // Check if the backup file exists
@@ -149,7 +154,7 @@ class BackupRestoreScreen : AppCompatActivity() {
         }
     }
 
-    // Function to check and request permission.
+    // Function to check and request permission
     private fun checkPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Environment.isExternalStorageManager()

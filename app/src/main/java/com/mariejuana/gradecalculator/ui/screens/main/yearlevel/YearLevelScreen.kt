@@ -61,7 +61,8 @@ class YearLevelScreen : AppCompatActivity(),
         }
 
         val settingIcon = binding.buttonSettings
-        updateSettingImageForTheme(settingIcon)
+        val noItemsFoundIcon = binding.iconNoItemsFound
+        updateSettingImageForTheme(settingIcon, noItemsFoundIcon)
     }
 
     override fun onResume() {
@@ -106,7 +107,7 @@ class YearLevelScreen : AppCompatActivity(),
         }
     }
 
-    private fun updateSettingImageForTheme(imgOwner: ImageView) {
+    private fun updateSettingImageForTheme(imgOwner: ImageView, noItemsFound: ImageView) {
         val isDarkMode = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES -> true
             Configuration.UI_MODE_NIGHT_NO -> false
@@ -115,8 +116,10 @@ class YearLevelScreen : AppCompatActivity(),
 
         if (isDarkMode) {
             imgOwner.setImageResource(R.drawable.ic_settings_white)
+            noItemsFound.setImageResource(R.drawable.ic_no_items_white)
         } else {
             imgOwner.setImageResource(R.drawable.ic_settings_black)
+            noItemsFound.setImageResource(R.drawable.ic_no_items_black)
         }
     }
 }

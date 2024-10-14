@@ -1,7 +1,9 @@
 package com.mariejuana.gradecalculator.ui.screens.main.categories.activities
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,6 +18,7 @@ import com.mariejuana.gradecalculator.databinding.ActivityActivitiesScreenBindin
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.activity.AddActivityDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.delete.activity.DeleteActivityDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.activity.UpdateActivityDialog
+import com.mariejuana.gradecalculator.ui.theme.GradeCalculator.Companion.context
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,6 +83,9 @@ class ActivitiesScreen : AppCompatActivity(),
         val layoutManager = LinearLayoutManager(this)
         binding.cvActivities.layoutManager = layoutManager
         binding.cvActivities.adapter = adapter
+
+        val noItemsFound = binding.iconNoItemsFound
+        updateImageForTheme(noItemsFound)
 
         binding.fabAdd.setOnClickListener {
             val addActivityDialog = AddActivityDialog()
@@ -192,6 +198,20 @@ class ActivitiesScreen : AppCompatActivity(),
             binding.textPercentage.text = "0% / ${String.format("%.2f", totalPercentage)}%"
         } else {
             binding.textPercentage.text = "${String.format("%.2f", percentage)}% / ${String.format("%.2f", totalPercentage)}%"
+        }
+    }
+
+    private fun updateImageForTheme(noItemsFound: ImageView) {
+        val isDarkMode = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+
+        if (isDarkMode) {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_white)
+        } else {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_black)
         }
     }
 }

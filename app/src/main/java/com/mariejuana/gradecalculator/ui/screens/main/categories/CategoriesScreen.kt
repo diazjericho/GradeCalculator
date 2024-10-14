@@ -1,8 +1,10 @@
 package com.mariejuana.gradecalculator.ui.screens.main.categories
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,6 +20,7 @@ import com.mariejuana.gradecalculator.databinding.ActivityCategoriesScreenBindin
 import com.mariejuana.gradecalculator.ui.screens.dialog.add.category.AddCategoryDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.delete.category.DeleteCategoryDialog
 import com.mariejuana.gradecalculator.ui.screens.dialog.update.category.UpdateCategoryDialog
+import com.mariejuana.gradecalculator.ui.theme.GradeCalculator.Companion.context
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,6 +75,9 @@ class CategoriesScreen : AppCompatActivity(),
         val layoutManager = LinearLayoutManager(this)
         binding.cvSubject.layoutManager = layoutManager
         binding.cvSubject.adapter = adapter
+
+        val noItemsFound = binding.iconNoItemsFound
+        updateImageForTheme(noItemsFound)
 
         binding.fabAdd.setOnClickListener {
             val addCategoryDialog = AddCategoryDialog()
@@ -192,6 +198,20 @@ class CategoriesScreen : AppCompatActivity(),
             }
         } else {
             println("Subject not found or retrieved successfully.")
+        }
+    }
+
+    private fun updateImageForTheme(noItemsFound: ImageView) {
+        val isDarkMode = when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> false
+        }
+
+        if (isDarkMode) {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_white)
+        } else {
+            noItemsFound.setImageResource(R.drawable.ic_no_items_black)
         }
     }
 }
